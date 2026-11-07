@@ -199,7 +199,7 @@ def shelf_layer(prog, tags=0.0):
     draw_products(im, prog)
     if tags > 0.01:  # cartellini categoria sul bordo dei ripiani
         for cat, sh in SHELF_OF.items():
-            s = text_sprite(CATS[cat][0], 26, WHITE)
+            s = text_sprite(CATS[cat][0], 30, WHITE)
             tag = Image.new("RGBA", (s.width + 24, s.height + 8), hex2rgb(CATS[cat][1][2]))
             tag.alpha_composite(s, (12, 4))
             paste(im, tag, SX0 + 10, BOARDS[sh] + 12, tags, anchor="tl") if False else \
@@ -421,10 +421,38 @@ def export_assets():
     for n in ("03_TESTI", "04_GRAFICHE", "05_AUDIO", "06_EXPORT"):
         d(n)
 
+def cover():
+    fr = background(0)
+    sh = mini(0, 0).resize((620, int(mini(0, 0).height * 620 / 470)), Image.LANCZOS)
+    paste(fr, sh, W / 2, 1180)
+    for i, s in enumerate(["UNO SCAFFALE PIENO", "NON È SEMPRE UNO"]):
+        put_text(fr, s, 80, W / 2, 330 + i * 100, 1)
+    s2 = text_sprite("SCAFFALE EFFICACE.", 80, WHITE)
+    overlay(fr, lambda d: brush(d, W / 2 - s2.width / 2 - 20, 480, W / 2 + s2.width / 2 + 20, 580, 1), 1)
+    paste(fr, s2, W / 2, 530)
+    put_text(fr, "@cristina.visual.merchandiser", 44, W / 2, 1640, 1, color=ORANGE)
+    return fr.convert("RGB")
+
+def export_texts():
+    out = os.path.join(ROOT, "03_TESTI"); os.makedirs(out, exist_ok=True)
+    texts = ["UNO SCAFFALE PIENO", "È DAVVERO EFFICACE?", "COSA NON FUNZIONA?", "CATEGORIE POCO CHIARE",
+             "GERARCHIA VISIVA DEBOLE", "PRODOTTI DIFFICILI DA TROVARE", "LA SOLUZIONE?", "UN'ESPOSIZIONE PIÙ ORGANIZZATA.",
+             "1. RAGGRUPPA PER CATEGORIA", "2. ALLINEA LE CONFEZIONI", "3. CREA UNA GERARCHIA VISIVA", "PRIMA", "DOPO",
+             "IL VISUAL MERCHANDISING NON È SOLO DECORAZIONE.", "È STRATEGIA ESPOSITIVA.",
+             "@cristina.visual.merchandiser", "SEGUIMI PER ALTRI CONSIGLI SULLA GDO."]
+    for i, s in enumerate(texts):
+        text_sprite(s, 72).save(os.path.join(out, f"{i + 1:02d}.png"))
+    g = os.path.join(ROOT, "04_GRAFICHE"); os.makedirs(g, exist_ok=True)
+    for name, fn in [("pennellata", lambda d: brush(d, 60, 60, 760, 180, 1)),
+                     ("cerchio", lambda d: ring(d, 260, 160, 220, 120, 1)),
+                     ("freccia", lambda d: arrow(d, 40, 120, 480, 120, 1, 16))]:
+        im = Image.new("RGBA", (820, 260), (0, 0, 0, 0)); fn(ImageDraw.Draw(im)); im.save(os.path.join(g, name + ".png"))
+
 if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == "assets":
-        export_assets()
+        export_assets(); export_texts()
+        cover().save(os.path.join(ROOT, "06_EXPORT", "copertina_1080x1920.jpg"), quality=95)
     elif cmd == "still":
         frame_at(float(sys.argv[2])).save(sys.argv[3])
     elif cmd == "frames":
