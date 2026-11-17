@@ -42,6 +42,14 @@ In `profili/lavoro.yaml` e `profili/personale.yaml`, ognuno con le sezioni `"16:
 
 Per un nuovo stile basta copiare un file YAML (es. `profili/cliente_x.yaml`) e usare `--profilo cliente_x`.
 
+## Stili dentro un profilo
+Un profilo può avere più stili in una sottocartella, che **ereditano** le impostazioni e cambiano solo ciò che serve:
+```bash
+python editor.py tutto video.mp4 --profilo lavoro/youtube   # YouTube lungo 16:9
+python editor.py tutto video.mp4 --profilo lavoro/reel      # Reel / Shorts 9:16
+```
+Per un nuovo stile crea `profili/lavoro/nome.yaml` con `base: lavoro` e solo le differenze.
+
 ## Come taglia
 - Taglia solo **tra le parole** (tempi di Whisper + margine): mai a metà parola.
 - Frasi rifatte: tiene **l'ultima presa**.

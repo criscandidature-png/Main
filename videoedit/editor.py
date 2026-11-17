@@ -34,12 +34,25 @@ def esegui(cmd: list[str]) -> str:
     return r.stdout + r.stderr
 
 
+def unisci(base: dict, sopra: dict) -> dict:
+    out = dict(base)
+    for k, v in sopra.items():
+        out[k] = unisci(out[k], v) if isinstance(v, dict) and isinstance(out.get(k), dict) else v
+    return out
+
+
 def carica_profilo(nome: str) -> dict:
+    """Accetta 'lavoro' o uno stile 'lavoro/youtube'. Uno stile eredita dal profilo con 'base:'."""
     f = CARTELLA_PROFILI / f"{nome}.yaml"
     if not f.exists():
-        disponibili = ", ".join(p.stem for p in CARTELLA_PROFILI.glob("*.yaml"))
+        disponibili = ", ".join(str(p.relative_to(CARTELLA_PROFILI).with_suffix(""))
+                                for p in sorted(CARTELLA_PROFILI.rglob("*.yaml")))
         sys.exit(f"Profilo '{nome}' non trovato. Disponibili: {disponibili}")
-    return yaml.safe_load(f.read_text(encoding="utf-8"))
+    dati = yaml.safe_load(f.read_text(encoding="utf-8"))
+    if dati.get("base"):
+        dati = unisci(carica_profilo(dati.pop("base")), dati)
+    dati.setdefault("nome", nome)
+    return dati
 
 
 def info_video(video: Path) -> dict:
@@ -304,7 +317,7 @@ def renderizza(video: Path, analisi: dict, piano: dict, profilo: dict, anteprima
     filtri.append(f"[ca]loudnorm=I={profilo['audio']['loudness']}:TP=-1.5:LRA=11[aout]")
 
     tag = piano["formato"].replace(":", "x")
-    out = cart / f"{video.stem}_{profilo['nome']}_{tag}{'_ANTEPRIMA' if anteprima else ''}.mp4"
+    out = cart / f"{video.stem}_{profilo['nome'].replace('/', '-')}_{tag}{'_ANTEPRIMA' if anteprima else ''}.mp4"
     script = cart / "filtri.txt"
     script.write_text(";\n".join(filtri))
     print(f"[render] {'anteprima 480p' if anteprima else 'finale'} -> {out}")
@@ -337,7 +350,7 @@ def main() -> None:
     analisi = analizza(a.video, profilo, a.rifai_analisi)
     formato = rileva_formato(analisi["info"]) if a.formato == "auto" else a.formato
     print(f"[info] profilo={profilo['nome']} formato={formato}")
-    f_piano = cart / f"piano_{profilo['nome']}_{formato.replace(':', 'x')}.json"
+    f_piano = cart / f"piano_{profilo['nome'].replace('/', '-')}_{formato.replace(':', 'x')}.json"
 
     if a.comando in ("pianifica", "tutto"):
         piano = pianifica(analisi, profilo, formato, a.senza_ai)

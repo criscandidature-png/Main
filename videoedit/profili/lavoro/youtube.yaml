@@ -1,0 +1,16 @@
+# LAVORO -> YouTube (video lunghi orizzontali). Eredita tutto da lavoro.yaml
+base: lavoro
+nome: lavoro/youtube
+taglio:
+  pausa_max: 0.45          # più respiro: su YouTube si ascolta, non si scorre
+ai:
+  istruzioni: |
+    Video YouTube lungo di Stefania Salvatore, "La Madrina dell'Accoglienza",
+    esperta di accoglienza per imprenditori e strutture turistiche. Tono autorevole e caldo.
+    Mantieni tutto il contenuto di valore e gli esempi pratici.
+    Taglia solo false partenze, ripetizioni, divagazioni e momenti morti.
+    Il primo segmento tenuto deve far capire subito di cosa parla il video e perché guardarlo.
+formati:
+  "16:9":
+    zoom: { attivo: true, fattore: 1.06, ogni: 4 }   # leggero, per non annoiare
+    sottotitoli: { attivi: false }   # su YouTube meglio i sottotitoli caricati a parte

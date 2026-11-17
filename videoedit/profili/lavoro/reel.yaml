@@ -1,0 +1,14 @@
+# LAVORO -> Reel Instagram / Shorts (verticale, ritmo veloce). Eredita da lavoro.yaml
+base: lavoro
+nome: lavoro/reel
+taglio:
+  pausa_max: 0.25
+ai:
+  istruzioni: |
+    Reel di Stefania Salvatore, "La Madrina dell'Accoglienza".
+    Messaggio chiave sull'accoglienza come protocollo che fa tornare i clienti.
+    Primo segmento = HOOK forte. Tieni solo un concetto, chiaro e diretto. Ritmo veloce.
+formati:
+  "9:16":
+    durata_max: 60
+    zoom: { attivo: true, fattore: 1.10, ogni: 2 }
