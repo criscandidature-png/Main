@@ -1,0 +1,55 @@
+# PROFILO: LAVORO — stile pulito, professionale
+nome: lavoro
+lingua: it
+
+taglio:
+  pausa_max: 0.35          # secondi di silenzio massimi lasciati tra due parole
+  margine: 0.10            # aria prima/dopo ogni parola (evita tagli a metà parola)
+  togli_riempitivi: true
+  riempitivi: [ehm, ehh, uhm, mmm, cioè, tipo, allora, praticamente, diciamo]
+  togli_ripetizioni: true  # se una frase è ripetuta, tiene l'ULTIMA presa
+  soglia_ripetizione: 0.75
+
+audio:
+  loudness: -16            # LUFS
+
+ai:
+  modello: claude-haiku-5-5
+  istruzioni: |
+    Video professionale/aziendale. Tono serio e chiaro.
+    Elimina divagazioni, battute fuori tema, frasi incomplete e false partenze.
+    Mantieni tutti i contenuti informativi. Niente sensazionalismo.
+
+formati:
+  "16:9":
+    larghezza: 1920
+    altezza: 1080
+    durata_max: null       # nessun limite
+    zoom: { attivo: false }
+    sottotitoli:
+      attivi: true
+      font: Arial
+      dimensione: 52
+      colore: "#FFFFFF"
+      bordo: "#000000"
+      spessore_bordo: 2
+      maiuscolo: false
+      parole_per_riga: 7
+      posizione: basso     # basso | centro | alto
+      margine_verticale: 60
+  "9:16":
+    larghezza: 1080
+    altezza: 1920
+    durata_max: 90
+    zoom: { attivo: true, fattore: 1.08, ogni: 3 }   # punch-in ogni 3 segmenti
+    sottotitoli:
+      attivi: true
+      font: Arial
+      dimensione: 70
+      colore: "#FFFFFF"
+      bordo: "#000000"
+      spessore_bordo: 3
+      maiuscolo: false
+      parole_per_riga: 4
+      posizione: centro
+      margine_verticale: 500
