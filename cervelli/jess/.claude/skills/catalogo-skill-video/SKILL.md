@@ -1,0 +1,344 @@
+---
+name: catalogo-skill-video
+description: Catalogo dei progetti open source (solo quelli con voto di sicurezza 'safe') che insegnano a Claude Code a fare video: framework, promo, spiegoni, montaggio, reel, avatar, storie, motion graphics, videoclip. Usala quando Cristina chiede quale skill video installare o come fare un tipo di video con il codice.
+---
+
+# Catalogo skill video per Claude Code (solo voto SICURO)
+Fonte: Awesome Claude Video Skills / agentskillshub.top, aggiornato 2026-11-17. 502 progetti sicuri su 520.
+
+## Come usarlo
+- Quando Cristina chiede un tipo di video, proponi 2-3 progetti adatti da qui, spiegando cosa fanno e cosa serve installare (es. Node.js, Remotion).
+- Consigliati dal test end-to-end: explainroo (film finito veloce), onetake (un'idea unica senza tagli), remotion-dev/skills (design proprio in Remotion). Hyperframes è lento (23 min per 15 s).
+- Per un promo semplice spesso basta Claude Code senza skill.
+- Per installarne una: Code → Download ZIP su GitHub, poi inviarla a Vivi su Telegram con didascalia «skill» (serve un SKILL.md).
+- Mai proporre progetti non presenti in questa lista senza avvisare che la sicurezza non è verificata.
+
+## 🧱 Frameworks & toolkits (85)
+- **heygen-com/hyperframes** ⭐85759 · TypeScript · Apache-2.0 — Write HTML. Render video. Built for agents.
+- **hypit-ai/hypit** ⭐30396 · TypeScript · NOASSERTION — Clone any viral video with AI agents. Not just a script, the whole workflow: swap the face, the words, the B-roll, ship 100 variants in one command, and get you
+- **nexu-io/openmotion** ⭐10659 · TypeScript · Apache-2.0 — The open-source Claude Motion & CapCut alternative. Turn a reference video into editable motion graphics with your brand kit. Export MP4s for YouTube, YouTube S
+- **remotion-dev/skills** ⭐7415 · TypeScript · licenza ? — Agent Skills
+- **NarratorAI-Studio/narrator-ai-cli-skill** ⭐3306 · - · MIT — AI 解说大师 — Agent skill；封装 narrator-ai-cli 供 Claude/Codex 等工具调用
+- **digitalsamba/claude-code-video-toolkit** ⭐2621 · Python · MIT — Make videos with Claude Code: script, AI voiceover, music, video clips and render, on open-source models that cost cents
+- **bangtutorial/bang-motion** ⭐2494 · HTML · MIT — Agent skill for browser motion graphics — openers, promos, bumpers, kinetic typography, and five explainer styles that move like video, not slides. Single index
+- **iart-ai/motion-skills** ⭐1809 · HTML · MIT — 56 open-source skills that teach your AI coding agent to make motion graphics, animation & video — kinetic typography, data-viz, explainers, TikTok/Reels, WebGL
+- **vibe-motion/skills** ⭐1703 · HTML · licenza ? — agent skills for vibe motion
+- **JDhruv14/line-art-animation** ⭐970 · TypeScript · MIT — A Claude skill and TypeScript library for animated line-art SVG components: ink figures that walk and react, scenes with a day/night cycle.
+- **GTAI-1/flow-mcp** ⭐659 · TypeScript · licenza ? — Drive Google Flow from Claude, Codex or a local control panel, on Mac or Windows — using your Google AI subscription credits instead of the pay-per-use video AP
+- **actionow-ai/vvv** ⭐561 · Python · MIT — 一次构建视频模板，多次复用：给 Claude Code、Codex 等 25+ 个 Agent 的开源可编辑婚礼视频模板与 Agent Skill。Build a video template once, reuse it across coding agents.
+- **mileson/chaojifeng-video-design** ⭐549 · HTML · MIT — 超级峰的视频设计方法论｜面向 AI Agent 的视频主线、分镜、声画节奏、制作与交付验收 Skill
+- **0xS4N4TG/kinetograph** ⭐527 · TypeScript · Apache-2.0 — A blazingly fast programmatic video engine, made for agents.
+- **Moessif/code-video-showcase** ⭐498 · JavaScript · MIT — A pure-code beat-synced showcase-video Agent Skill: HTML/Canvas/SVG/Three.js frame-by-frame + Python numpy/scipy score + FFmpeg. No generative models.
+- **squall01337/mixamo-llm-mocap** ⭐449 · Python · NOASSERTION — Turn any video into a Mixamo-rig animation - GVHMR estimator, spec-driven retarget, FK apply in Blender via MCP. Works with any Mixamo character; built to be op
+- **FavioVazquez/showtime** ⭐339 · Python · MIT — A local video studio for your coding agent. Describe a video in one sentence: your agent directs, your machine renders. Claude Code, Codex, Cursor, Devin and mo
+- **Hainrixz/editor-pro-max** ⭐304 · TypeScript · NOASSERTION — AI-powered video editor by @soyenriquerocha — built with Remotion + Claude Code. Describe videos in natural language, get professional MP4s. 25 components, 9 te
+- **JuneYaooo/capsule-cinema** ⭐295 · Python · Apache-2.0 — 把视频做成模版，一次配方无限视频 · Turn videos into templates. One recipe, unlimited videos.
+- **kangarooking/director-skills** ⭐293 · Python · MIT — 导演Skill：面向 AI 视频创作的开源 Agent Skills | Director Skills: Open-source Agent Skills for AI video creation.
+- **codepawl/creator-generalist** ⭐261 · Python · MIT — AI agent skills to be professional at 2D and 3D
+- **iart-ai/motion-design-skills** ⭐240 · HTML · MIT — Motion design fundamentals, engines, and brand elements as installable Claude Code skills — timing, typography, color, composition, After Effects, Remotion, log
+- **video-db/skills** ⭐147 · Python · MIT — Server-side video workflows for agents: ingest, understand, search, edit, stream.
+- **killkli/minimax-h3-colab-skill** ⭐137 · Python · licenza ? — Standalone Codex skill for MiniMax H3 Colab reference-to-video generation
+- **jhartquist/claude-remotion-kickstart** ⭐125 · TypeScript · MIT — Create videos programmatically with Claude Code and Remotion
+- **Hype-yolo/claude-motion-skill** ⭐120 · JavaScript · MIT — Source-assisted animation Skill: 47 open-source cases, editable scenes and MP4 export. Public beta.
+- **leodavincs/kalem** ⭐118 · Python · NOASSERTION — Claude Code skill: her sahnenin kendi kalemi var. Videoyu sahnelere böler, her sahneye uygun motoru seçer (Paper.js, PixiJS, HyperFrames, Three.js, Manim).
+- **YKLovePython/halfsize** ⭐110 · HTML · MIT — Compress any video to an exact size (Discord 20 MB, WeChat 20 MB, WhatsApp 16 MB) locally with FFmpeg. HDR is tone-mapped to SDR, VMAF/SSIM prove the quality, a
+- **8533502-dev/deepseek-opus-motion-skill** ⭐87 · TypeScript · MIT — 让 DeepSeek 用和 Claude Opus 5.5 同样的提示词做出接近的 Remotion 动效视频 · A skill for Opus-parity motion design
+- **dev-isaacmello/extreme-motion-design** ⭐76 · Python · MIT — Skill de motion design por código (Remotion) com trilha, narração e QA automático. Para Claude, Claude Code e Codex.
+- **LordVayron/video-factory** ⭐71 · JavaScript · MIT — An AI video studio your coding agent installs and runs: UGC ads, micro-dramas, sitcoms, launch films, fantasy shorts, hour-long meditations. Claude Code / Codex
+- **Changroro/code-video** ⭐69 · Python · MIT — Agent skill: research a topic and render a hand-drawn + 8-bit promo video (MP4)
+- **motalim-ai/motion-starter-kit** ⭐55 · TypeScript · MIT — اصنع فيديو موشن جرافيك بـ Remotion من أي فيديو مرجعي. نفس القواعد لـ Claude Code وCodex وAntigravity.
+- **autoip/dreamfab** ⭐51 · Python · MIT — Dreamfab 造夢廠：AI Agent 影音製作框架。一句話，你就是導演和製作人，AI Agent 用 AutoIP + ffmpeg 幫你做出短劇、MV、解說影片。
+- **JJenglert1/remotion-claude-video** ⭐50 · Python · licenza ? — 
+- **Johnson-Jia/video-clipforge** ⭐49 · Python · Apache-2.0 — AI 驱动的短视频制作系统。给它一个想法，它帮你写稿、配音、做画面、出成片。9 阶段 DAG 管线 + 自进化评分，支持每日自动执行。基于 Claude Code + HyperFrames。
+- **erduo1998-cell/vidmuse-video-creator** ⭐46 · Python · MIT — Open-source Agent Skill for VidMuse images, videos, and SRT B-roll from first authorization to delivery
+- **ZLHad/OpenVideoHarness** ⭐35 · JavaScript · MIT — A video harness work platform for Agents such as Claude or Codex: the agent writes the code that renders the film, checks its own frames, storyboard and cut.  给
+- **edotheDev/claude-video-kit** ⭐35 · Python · MIT — Agents and skills for Claude Code to edit video and make motion films in code: real footage, real type, measured sound.
+- **WhiteTowerAI/cut-as-code** ⭐34 · JavaScript · MIT — Open-source agentic video editing skills — an AI-powered alternative to Opus Clip and CapCut
+
+## 📣 Promo & demos (90)
+- **feitangyuan/onetake** ⭐4206 · Python · NOASSERTION — Motion films that never cut to the next slide: every beat grows out of the one before, one continuous camera, continuity measured by an oracle. Product launch f
+- **Tejashmakwana/motionmaxxing** ⭐1646 · JavaScript · Apache-2.0 — Looksmaxxing for motion graphics. An agent skill that turns AI slop videos into films that look made by a motion designer.
+- **echris6/motion-video-kit** ⭐1422 · Python · MIT — Claude Code skill kit for premium AI-assisted business videos: independent critic loop, motion principles from 28 launch films, quality bar, sound design, busin
+- **op7418/guizang-product-video-skill** ⭐951 · Python · AGPL-3.0 — 归藏 product video skill：复用真实产品组件和设计语言，用代码制作软件更新宣传片。包含分镜文案、原创配乐、动作音效与视频渲染，支持 Claude Code 和 Codex。
+- **charlie947/motion-graphics-skills** ⭐708 · Shell · MIT — 13 Claude Code skills for launch-grade motion graphics. Every frame is code. No After Effects, no video generator.
+- **AbubakrChan/product-launch-motion** ⭐486 · JavaScript · MIT — Claude Code skill for Dribbble-level product launch videos from code. One shape that never cuts, springs, a cursor that drives every change, beat-synced SFX, 60
+- **geekjourneyx/hyperframes-motion-director** ⭐485 · JavaScript · AGPL-3.0 — Agent Skill for Chinese-first HyperFrames motion-video production from articles, products, websites, and README files.
+- **Jane-xiaoer/paper-collage-ad-codex** ⭐428 · JavaScript · MIT — Codex skill for complete paper-cut collage ad production, local IndexTTS-2 voice cloning, animation, audio and MP4 QC
+- **Kianzzz/xilo-opus-video** ⭐412 · Python · MIT — 用 Claude Opus 5.5 写代码做视频：先给三个方案和预览，确认后逐帧渲染成片 | Canvas / WebGL / Three.js / Remotion / HyperFrames | Claude Code Skill
+- **aaitor/skill-video-studio** ⭐397 · HTML · MIT — Claude Code skill for product videos: real browser capture, branded composition, and local mastering.
+- **talsiach/take-one** ⭐332 · HTML · MIT — Claude Code skill that makes launch videos, ads and music videos from one line: idea, script, visuals, voice, music, edit and review, then a review room where y
+- **tugrawork-creator/saas-motion-kit** ⭐270 · Python · NOASSERTION — Promo & motion videos for software products with HyperFrames + Claude Code. No two films should feel the same: tone matrix, variety audit, 24-transition atlas, 
+- **Sunwood-ai-labs/hyperframes-motion-reel-skill** ⭐191 · - · MIT — 🎬 Claude Code skill for showreel-grade, beat-synced motion graphics with HyperFrames (HTML + GSAP + SVG + Canvas, Apache-2.0) — 120 BPM / 60 FPS to MP4
+- **Finderchangchang/promo-video-skill** ⭐188 · JavaScript · Apache-2.0 — 精酿 BrewReel：让 DeepSeek 这类便宜模型也能做出好看的竖版宣传片。写一份产品简报，AI 挑镜头、写文案，一条命令出片。3 种配方、6 个行业、广告法校验，开源可商用。
+- **kingselyjoe/video-shotcraft-dsh** ⭐159 · TypeScript · Apache-2.0 — 面向 DeepSeek Harness 的电影感产品视频 Agent Skill，包含 152 张镜头配方卡、Remotion 模板、代码组件和音频资产。
+- **bestagentkits/motion-video-skill** ⭐148 · JavaScript · MIT — Agent skill that produces beat-synced 1080p motion-graphic videos in HyperFrames (HTML + GSAP) with an AI voice-over, karaoke captions, SFX and generated music.
+- **gmpetrov/agent-screenplay** ⭐126 · TypeScript · MIT — Beautiful screen recordings, made by your favorite AI agent.
+- **kangarooking/promo-creator-skills** ⭐120 · Python · MIT — 产品宣传视频创作 Skills：从产品判断、分镜、素材、HyperFrames 剪辑到 BGM 设计的完整 Agent 工作流
+- **leosssvip-dot/remotion-ad-video-skill** ⭐110 · JavaScript · MIT — Create Remotion ad video projects from a URL with an AI coding agent, no video-generation AI required.
+- **Avijit07x/cursorcam** ⭐97 · TypeScript · Apache-2.0 — Ask your AI agent for a demo video. It clicks through your web app and hands back a polished MP4 that zooms in on each click. Works with any AI agent, or on its
+- **Mort1d/motion-graphics-skills** ⭐80 · JavaScript · NOASSERTION — Showreel-grade motion graphics from code, with an original soundtrack for every video. An Agent Skill for Claude Code, Codex, Cursor and other agents.
+- **revfactory/showreel** ⭐74 · Python · MIT — Claude Code skill that produces Korean motion-graphics videos end to end: brief, research, script, ElevenLabs narration, music, images, deterministic HTML rende
+- **noamdorr/saas-product-demo-video** ⭐72 · TypeScript · MIT — Skill for shipping a 20-45s SaaS product demo video in Remotion. Built and used in production with Claude Code; methodology is LLM-agnostic.
+- **norahe0304-art/30x-video** ⭐64 · TypeScript · MIT — One URL in, an agency-grade launch video out. A Claude Code skill (Remotion + React) with a 16-law taste codex — 12 brands, 12 worlds, zero templates.
+- **krisyangdev/motionboard** ⭐63 · HTML · MIT — Make launch videos and motion graphics with Claude Code or Codex: free HyperFrames skill + 38 shot recipes (match cut, logo reveal, kinetic typography, liquid g
+- **rjmahesh/ui-redline-walkthrough** ⭐62 · HTML · MIT — Claude skill: turn before/after UI screenshots into an animated redline walkthrough video (red ink marks, morphing UI, MP4 export)
+- **imMamdouhaboammar/motion-graphics-skills** ⭐61 · JavaScript · NOASSERTION — Motion graphics for AI agents. Creative direction + production skills for Claude Code & Codex, powered by HyperFrames. Build brand films, kinetic type, 2D/3D an
+- **axtonliu/video-illustrator** ⭐52 · JavaScript · MIT — Your voice, your assets, any look you choose — an Agent Skill that turns your narration and real assets into a short film.
+- **trunghaiy/appshot** ⭐52 · TypeScript · MIT — Generate App Store & Google Play preview videos and screenshots from a simple TypeScript config. Built on Remotion + React + Tailwind. Ships with AI agent skill
+- **Zane-0x5a/remotion-director** ⭐51 · JavaScript · MIT — A Claude Code plugin that designs and builds a finished motion piece from a one-line brief — via the 甲乙环 (critic-loop) pipeline, judged on its real rendered fra
+- **new-xp/ultrademo** ⭐47 · JavaScript · Apache-2.0 — Moved to github.com/ultrademo-hq/ultrademo. This is the original Ultrademo skill; it still works but is no longer updated.
+- **BayramAnnakov/remotion-video-director** ⭐45 · - · licenza ? — Interactive Claude Code skill for creating Remotion videos through expert-guided deliberation
+- **mattivilola/brag-codex** ⭐41 · Python · MIT — Codex-compatible clone of latent-spaces/brag for Hyperframes launch videos
+- **crimeacs/product-demo-director** ⭐38 · Python · MIT — Turn product evidence and raw footage into narration-paced, source-bound demo films—with Codex or Claude Code directing cuts, zooms, render, and QA.
+- **every-app/video-skills** ⭐37 · Python · MIT — Make great videos about your product 10x faster.
+- **Hainrixz/motion-architect** ⭐35 · Python · MIT — Agente de motion graphics para Claude Code. Le das videos, imágenes y tu marca; él diseña, anima y renderiza en 9:16, 16:9, 1:1 y 4:5. Todo local.
+- **gorkem-bwl/onboarding-video-generator** ⭐30 · TypeScript · MIT — Claude Code skill for column-sized web app onboarding videos in Remotion
+- **useapi/muse-api** ⭐30 · Python · MIT — Meta Muse API examples (muse.ai) and a hosted MCP server with 37 tools for Claude Code, Cursor and VS Code. Images and 10-second videos with sound on your Muse 
+- **SallyRS/video-director** ⭐29 · Python · MIT — Claude Code skill that directs short videos from brief to render: design options, storyboard, motion spec, HyperFrames build and render checks. Rules measured f
+- **dlazy-ai/ai-product-video** ⭐28 · TypeScript · Apache-2.0 — AI agent skill (Claude Code / Codex) that turns your product into a cinematic promo video: 152 shot recipe cards, 209 style variants, tuned Remotion implementat
+
+## 🎓 Explainers (91)
+- **EverMind-AI/Raven**/skills/git-story-film ⭐6238 · Python · Apache-2.0 — Direct a two-minute hand-drawn animated film from a repository's Git history: story, character, storyboard, HTML review studio, then a 4K/60fps MP4.
+- **Alisa0808/vox-director** ⭐2926 · Python · MIT — Turn one topic into a finished Vox-style paper-collage explainer/ad video — automated end to end on Atlas Cloud + ffmpeg. An agent skill.
+- **vincentsch/explainroo** ⭐1353 · JavaScript · MIT — Explainer videos and product demos made by your AI agent. Free and open source: a local voice (Kokoro), word timing (Whisper) and a canvas renderer turn a scrip
+- **adithya-s-k/manim_skill** ⭐1327 · Python · MIT — Agent skills for Manim to create 3Blue1Brown style animations.
+- **HeyChengC/wallstreet-explainer** ⭐728 · JavaScript · NOASSERTION — 华尔街式财经/科技解读短片 skill：设计思路、风格语言，以及找片、截图、配音、渲染和混音工具。
+- **Moh4696/cinematic-skill** ⭐718 · Python · MIT — Agent skill for narrated cinematic films built entirely from code: one continuous camera over photos, maps and cards, timed to the voice. Claude Code, Codex, Cu
+- **GTKottman/mortiflix-oss** ⭐703 · JavaScript · AGPL-3.0 — A motion design studio on your own machine: Claude makes the video step by step, you approve every stage. Bring your own Claude Code or API key.
+- **hi-nikola/hand-drawn-explainer-video-nikola** ⭐491 · Python · Apache-2.0 — 中文手绘知识讲解视频 Codex Skill：逐笔故事、双语义岛、让怪诞小黑动起来与程序动画
+- **moguzbulbul/blueprint-animation** ⭐438 · JavaScript · NOASSERTION — Claude Design skill: animated before → after UX redesign, explained step by step through a blueprint drawing. By @moguzbulbul.
+- **Anil-matcha/vox-ai-motion-graphics-generator** ⭐359 · Python · licenza ? — 🎬 Turn any topic into a finished Vox-style paper-collage explainer / motion graphics video — script, collage keyframes, animation, voice-over, music & captions,
+- **shuyicc/MathLens** ⭐352 · Python · licenza ? — MathLens 是一个专注于数学题目视频讲解的 Agent Skill。你只需粘贴一道数学题（图片或文字），它就能自动完成从题目分析、可视化讲解、配音脚本到 Manim 动画视频的全流程制作。单条视频1-10 分钟，成本 0.2-1 元以内。
+- **chuspeeism/dashi-animationstyle** ⭐223 · HTML · NOASSERTION — 把一段中文知识口播做成 7 种画风的讲解动画（Claude Code skill）：画面由 Claude 写 HTML/Canvas 代码逐帧画出，不用生图模型
+- **haiderfarooq3/khan-explainer** ⭐163 · JavaScript · MIT — Claude Code skill: Khan Academy style explainer videos. A pen draws while a voice explains. Free, local, no API keys.
+- **derek-zhuolin/motion-skill** ⭐128 · TypeScript · NOASSERTION — 不出镜，用文案或录音把想法做成视频。Script- or voice-driven motion graphics with Codex and Remotion: real footage, captions, editable projects and 96 motion studies.
+- **runesleo/claude-video-kit** ⭐124 · TypeScript · MIT — Agent Skill + Remotion pipeline: brief/script → review receipt → narrated 9:16 explainer. RC: video-explainer skill.
+- **iart-ai/explainer-video-skills** ⭐119 · HTML · MIT — Explainer video skills for Claude Code: script, storyboard, and render narrated explainers, year-in-review recaps, and animated diagrams.
+- **GODGOD126/opus-5-5-86-styles-in-motion** ⭐87 · JavaScript · licenza ? — 86 visual styles for code-driven explainer animations. A Codex skill: choose a style, preview 20 seconds, then create the full HTML video.
+- **holy-templar/vox-animated-ad-mcp** ⭐81 · - · AGPL-3.0 — Vox-style paper-collage animated video skill for AI agents — Claude + MaxFusion AI MCP (Google Omni). One sentence in, a full explainer or ad out, entirely from
+- **sunxiayi/make-blender-education-video-skill** ⭐71 · Python · MIT — A Codex and Claude Code skill for creating fact-checked cinematic educational videos with Blender
+- **znyupup/knowledge-explainer-skill** ⭐71 · JavaScript · MIT — 把一份 markdown 文稿，自动生成讲解动画视频 — Powered by Remotion + AI Agent
+- **threerocks/sweety-statechart-video** ⭐69 · Python · MIT — 格物 · 蜡笔状态图：一句话做一部会动的蜡笔状态图短片。3:4、2-3 分钟、四款合成旁白（可加自己的声音）、每章一张海报；支持 Codex、Claude Code、Grok 等，可批量出片。
+- **Anil-matcha/zack-d-films-ai-video-generator** ⭐66 · Python · licenza ? — 🎬 Turn any topic into a finished Zack D Films-style 3D animated short — curiosity-loop script, character sheets, 3D keyframes, Veo 3.1 motion, voiceover, captio
+- **SpeedPainterOrg/explainer-video** ⭐61 · JavaScript · licenza ? — Codex plugin for turning text, URLs, and documents into narrated hand-drawn explainer videos.
+- **howoneai/xiaolin-explainer-packaging** ⭐58 · TypeScript · NOASSERTION — 小Lin说风格讲解视频包装 skill：Remotion 版式组件、关键词计时分镜、混音、逐帧质检、资料检索（非官方）
+- **SunandBean/paper2video** ⭐52 · JavaScript · MIT — Claude Code skill: arXiv paper to a narrated, fact-checked explainer video (Three.js scenes, local Kokoro TTS, ffmpeg).
+- **AmitSubhash/3brown1blue** ⭐47 · Python · MIT — First-principles Manim skill for Claude Code — mathematical animation from scratch, paper-explainer patterns, 21 rule files.
+- **vibe-motion/remotion-code-motion-explainer** ⭐45 · TypeScript · MIT — AI Agent skill for continuous, editable Remotion explainers — created by Bingo
+- **Agentchengfeng/chengfeng-video-styles** ⭐38 · HTML · Apache-2.0 — 15 种代码视频风格 Skill：让 Claude Code / Codex 用纯代码做 10 秒知识讲解短片
+- **santmun/video-vox** ⭐35 · JavaScript · licenza ? — Crea shorts verticales animados estilo Vox sobre cualquier tema con Claude Code + Remotion (cartoon + voz + música + SFX)
+- **Mr-funny/hbg-douyin-code-explainer-video** ⭐33 · Shell · licenza ? — HBG Codex skill for deterministic Chinese 9:16 HyperFrames explainer videos with dialogue TTS, global Whisper sync, stable BGM and final visual QA.
+- **vakovalskii/nd-video-studio** ⭐33 · Python · MIT — Explainer videos from HTML (HyperFrames → MP4) with AI narrator, music and mixing — Claude Code / Codex skills on NeuralDeep models
+- **BusyBee3333/animated-explainer-skills** ⭐31 · HTML · MIT — Build Kurzgesagt-quality animated explainer videos as one self-contained HTML file — GSAP choreography patterns, YouTube-retention method, overlap auditor, Elev
+- **dy-hashiqi/VibeDS-skill** ⭐31 · - · Apache-2.0 — 
+- **syydaniel/kazi** ⭐31 · Python · NOASSERTION — 卡字 kazi：让 AI 做的讲解动画，画面卡在旁白的关键词上。A skill for AI coding assistants: explainer animations that land on the voice-over's keywords.
+- **ahmdd4vd/MotionCraft** ⭐29 · JavaScript · MIT — Clean, high-taste motion graphics videos made by your AI agent with Remotion. One-command Agent Skill: npx skills add ahmdd4vd/motioncraft
+- **paullabs/espaco-em-codigo** ⭐29 · JavaScript · NOASSERTION — Estúdio de vídeos de espaço e ciência em código: planetas, marés e explosões em 3D (Three.js), câmera de cinema, voz e conferência quadro a quadro. Plugin do Cl
+- **Matteoikarieth96/whiteboard-video-skill** ⭐27 · HTML · MIT — Claude Code skill: turn any topic into a hand-drawn whiteboard explainer video with voice-over and captions
+- **iart-ai/map-animation-skills** ⭐27 · HTML · MIT — Animated map skills for AI coding agents — draw routes, zoom-to-location, and data-driven map animations rendered to video.
+- **indieshade/video-director-workflow** ⭐27 · HTML · MIT — Design-led AI video workflow: director skill, aesthetic guidance, blind comparisons and a reproducible HyperFrames collage sample
+- **124zhe/xigua-msvideo-skill** ⭐26 · Python · MIT — Codex skills for YouTube curiosity stories, MS Paint storyboards, narration, and video assembly.
+
+## ✂️ Editing (59)
+- **FireRedTeam/FireRed-OpenStoryline** ⭐3702 · Python · Apache-2.0 — FireRed-OpenStoryline is an AI video editing agent that transforms manual editing into intention-driven directing through natural language interaction, LLM-powe
+- **Agentchengfeng/chengfeng-videocut-skills** ⭐3235 · JavaScript · Apache-2.0 — 用 Claude Code Skills 做的视频剪辑 Agent
+- **0xsline/OpenChatCut** ⭐3169 · TypeScript · AGPL-3.0 — Open-source, local-first conversational AI video editor with a professional multi-track timeline, Agent Skills, MCP integration, and Remotion rendering.
+- **JimLiu/baocut** ⭐1784 · TypeScript · NOASSERTION — BaoCut: an AI video agent with an editable timeline. Transcribe, subtitle, translate, dub, cut and animate.
+- **pireel/pireel** ⭐1420 · TypeScript · AGPL-3.0 — Open-source AI video editor: captions, cuts, B-roll, export to Premiere and DaVinci. Drive it from any AI agent over MCP. A CapCut and ChatCut alternative.
+- **Barty-Bart/motion-graphics** ⭐1343 · HTML · NOASSERTION — Motion-graphics skills for Claude Code and Codex.
+- **Vibha-Ramprakash/claude-video-effects** ⭐1028 · Python · NOASSERTION — 51 free video effects for Claude Code: drop in a talking-head clip, type /effects orbit. Face tracking, behind-your-head layers. From Hop Studio by @vibha.in.pr
+- **hetpatel-11/Adobe_Premiere_Pro_MCP** ⭐889 · TypeScript · MIT — Adobe Premiere Pro MCP. Tools for AI-driven video editing via MCP, for Codex, Claude, and other MCP clients.
+- **cartesiancs/cartcut** ⭐832 · TypeScript · MIT — Video Editor for AI agents, built on the belief that open source can beat commercial tools
+- **zenstory-ai/video-recap-skills** ⭐636 · Python · MIT — AI 视频解说全流程 skill 包：自动切镜头、看画面写解说词、配音合成成片，支持一键导出可编辑的剪映/CapCut 草稿，无需 GPU ｜ Agent skills that turn videos into narrated recaps & editable CapCut drafts
+- **kurbaitaev/ghost-editor** ⭐596 · Python · MIT — Raw talking-head take in, finished reel out. Open-source AI video editor for Claude Code.
+- **leancoderkavy/premiere-pro-mcp** ⭐545 · TypeScript · MIT — Adobe Premiere Pro MCP — independent, local-first server for supported workflows. Connect Claude, Codex, or Cursor through a local CEP bridge.
+- **YeJe-cpu/SeeCut** ⭐466 · JavaScript · NOASSERTION — An AI editor that watches its own cut: talking-head / AI-avatar video → auto-edited short video. 网感口播精剪：数字人/真人口播 → AI 自动精剪成网感动效短视频 → 可选剪映分层草稿
+- **AgriciDaniel/claude-shorts** ⭐420 · Python · MIT — Interactive longform-to-shortform video creator — Claude Code skill with Remotion-rendered animated captions, AI segment scoring, cursor tracking, and audio-awa
+- **hassancs91/claude-youtube-editor** ⭐383 · TypeScript · MIT — Record the talking head, Claude Code does the rest: the cut, the visuals, the voice, the sound effects, the thumbnail, and the YouTube upload. Every screen mome
+- **erduo1998-cell/erduo-broll-loop-engineering** ⭐250 · TypeScript · MIT — SRT 驱动的双后端 B-roll Agent Skill：自动路由 HyperFrames / Remotion，集成 152 张 Shotcraft 镜头卡
+- **Cassette-Editor/oh-my-cassette** ⭐220 · Python · MIT — 你的随身 AI 剪辑搭档 | Pocket AI co-editor for video montage — AI video editing plugin & MCP server for Claude Code, Codex, Hermes & OpenCode
+- **znyupup/ai-video-editing-skill** ⭐183 · Python · MIT — AI Agent Skill for automated vlog editing. Feed raw footage, get a finished video. Powered by ffmpeg + Whisper + Vision API.
+- **mrpaidsocial/mrpaidsocial-video-editor-agent** ⭐172 · Python · licenza ? — Claude Code skill pack: edit short-form videos end to end — style-clone a reference reel, build a branded motion-graphics edit, ElevenLabs sound design, frame-l
+- **Xiangyu-CAS/rea-capcut** ⭐154 · TypeScript · MIT — ReaCut — REA × CapCut: an independent, open-source video editor rebuilt from REA-assisted, authorized local behavior and format research. No copied CapCut propr
+- **ayushozha/AdobePremiereProMCP** ⭐149 · Go · MIT — An open-source bridge between AI assistants and Adobe Premiere Pro, for supported editing workflows. Go, Rust, Python, and TypeScript.
+- **naive-kun/naive-video-skill** ⭐137 · Python · MIT — A Codex skill for turning talking-head videos into captioned, animated final videos.
+- **louisedesadeleer/cut-video** ⭐121 · Python · MIT — Claude Code skill: tighten long recordings — remove silences, ums, dead air. Preserves laughs and comedic pauses. Fast on Apple Silicon.
+- **Monet-AI-Editor/Monet** ⭐119 · TypeScript · MIT — Edit Videos and Design Images with Claude code or Codex
+- **AKMessi/vex** ⭐100 · Python · NOASSERTION — claude code for video editing
+- **JUNKDOGE-JOE/after-effects-mcp** ⭐97 · JavaScript · MIT — AI-powered Adobe After Effects automation via MCP. Chat in a CEP panel or connect external agents, with 16 tools for editing, previews, recovery, reusable scrip
+- **artemnovitckii/claude-editing-skills** ⭐84 · HTML · NOASSERTION — Claude Code skills that edit your talking-head clips into reels: trial reels, behind the person, explainer, split screen, ranking list, storytelling. Rendered l
+- **AISEO-VirtualabDigital/mcp-video-editor** ⭐80 · TypeScript · licenza ? — Wag na kayo magbayad ng 5k PHP. Ito na — libre. MCP server for CapCut + OpenCut from Cursor, Claude, Codex, Antigravity, OpenCode, KiloCode, Qwen Code and ZCode
+- **alisadiq-ai/favstash-ai-video-editing-skills** ⭐78 · JavaScript · Apache-2.0 — Create Instagram Reels, TikToks and YouTube Shorts with adaptive AI editing, captions and motion graphics. Connect FavStash for planning, publishing and analyti
+- **RoverEva/eva-video-style** ⭐72 · JavaScript · MIT — Open-source AI video editing skill for talking-head videos. Features ready-to-use templates, cinematic effects, motion graphics, and animated captions. Choose a
+- **zhouyuechuan2025-ui/aipacking** ⭐52 · CSS · MIT — aipacking | AI 真人口播包装：MP4 + SRT、章节时间轴、语义动效和成片导出
+- **hahadu4520/vlog-cut** ⭐49 · Python · NOASSERTION — Narration-driven video editing pipeline for Claude Code · 给 Claude Code 用的「按文案剪辑」流水线
+- **darrenli6/JJKoubo** ⭐42 · JavaScript · NOASSERTION — JJ Koubo (JJ口播) is a local-first collection of video editing Skills for talking-head, interview, knowledge-sharing, and other videos centered on spoken content.
+- **pedroxcardoso/maquina-cortes-gta** ⭐40 · JavaScript · MIT — Skill do Claude Code: vídeo longo vira vários cortes de Shorts sobre GTA 6 (metade streamer, metade vídeo, legenda palavra por palavra). Remotion + whisper.cpp.
+- **frankShan001/CutVoke** ⭐39 · Python · MIT — Open-source, local-first video editor your AI agent can drive over MCP (Claude Code, Codex, Cursor). Windows · macOS · Linux. The AI makes the cut; you finish i
+- **Kappaemme-git/codex-video-short-maker-skill** ⭐35 · Python · MIT — 
+- **skailabinfo/claude-video-harness** ⭐28 · TypeScript · MIT — Монтаж вертикальных роликов «говорящая голова» в Claude Code + Remotion: клонируй, ответь на вопросы — пайплайн настроится под тебя
+- **denyakortunov/family-travel-editor** ⭐20 · Python · MIT — An AI agent skill for organizing travel footage, planning scenes and revising films in your preferred editor. Not a standalone video editor.
+- **onuryildriim/claude-kurgu-atolyesi** ⭐19 · JavaScript · MIT — Claude Code ile konuşan-kafa YouTube videolarını kodla kurgulama atölyesi — Remotion + FFmpeg, kendi marka kimliğinle.
+- **davidbfrogman/davecto-cutroom** ⭐18 · JavaScript · licenza ? — Edit your talking-head videos with Claude: a local editor, a notes loop, captions and animations in your own brand. Claude Code plugin for macOS.
+
+## 📱 Shorts & social (67)
+- **adunext/adu-motion-video** ⭐913 · JavaScript · MIT — 阿杜的 AI 剪辑 Skill｜全系列模板已升级为 MotionGit .motion 开放格式，下载后直接发给助手即可创作。下载：https://motiongit.com/@adunext ｜精选阿杜与 Opus 5.5 制作的代码级动画模板，适合口播、知识讲解，支持多平台、多助手。
+- **artemnovitckii/claude-animation-skills** ⭐854 · JavaScript · NOASSERTION — Eleven Claude Code skills that make animations for reels, no footage needed: low-poly, Minecraft-style voxel, 3D cartoon explainer, Kurzgesagt-style space, Dan 
+- **Yuuhann1999/agent-storyboard** ⭐400 · JavaScript · MIT — 本地优先的 Agent 视频分镜工作台：让 Codex、Claude Code 通过 MCP 写分镜、生成图片/视频素材和配音，并自动回填。Local-first storyboard workbench for AI agents (Codex, Claude Code).
+- **hassancs91/claude-faceless-shorts-creator** ⭐370 · TypeScript · MIT — A faceless YouTube-Shorts factory driven by Claude Code: pure-TSX Remotion visuals, ElevenLabs voice with word-exact captions, library-first sound design. 12 co
+- **fendouai/ViralForge** ⭐263 · TypeScript · Apache-2.0 — Agent-native viral video studio: one-click replicate viral short videos, deconstruct video hooks and scripts into a Viral DNA report, and ship 10 costed variant
+- **Cuongyd196/remotion-cuongit-template** ⭐247 · TypeScript · MIT — Bộ skill cho AI agent tạo video ngắn 9:16 bằng Remotion: giải thích chủ đề, giới thiệu GitHub repo, so sánh hai lựa chọn.
+- **0xS4N4TG/papercut-explainer** ⭐234 · TypeScript · MIT — Short vertical cut-paper explainer reels, made by your coding agent. Nine Agent Skills plus a Remotion library. Works with Claude Code, OpenCode, Codex, Gemini 
+- **haiderfarooq3/paper-reel** ⭐143 · JavaScript · MIT — Claude Code skill: faceless 9:16 explainer reels in a cut-paper style. Voice-timed scenes, word-by-word captions. Free, local, no API keys.
+- **SpaceZephyr/map-motion** ⭐124 · Python · NOASSERTION — 地图动效视频 Claude Code skill：基于高德地图真实路线/边界/卫星底图，做地球俯冲、vlog 我在这里、徒步海拔、骑行旅程、航线、行政区高亮等地图动画，12 种风格
+- **pycodebr/heditor** ⭐117 · Python · NOASSERTION — Creative vertical video editing skill for AI agents (Claude Code, Codex, OpenCode, Cursor, Hermes): named styles, creative mode, HyperFrames + voice-first mix.
+- **jaxxchen003/book-video-factory** ⭐113 · Python · MIT — Portable Codex skill for auditable, rights-aware Chinese book-review short-video workflows.
+- **Chamanrajragu/purffle-shorts** ⭐91 · Python · MIT — Free open-source AI YouTube Shorts generator and faceless video maker in Python. Any LLM (GPT, Claude, Gemini, Ollama) writes scripts; text-to-speech, stock foo
+- **ymybxx/SoloMCN** ⭐76 · JavaScript · MIT — 把 Claude Code 变成你的短视频团队：不搭工作流，直接让 Claude 干活，从国内热榜、推特热帖到抖音、小红书、B站、YouTube、推特发布。Turn Claude Code into your short-video team — no workflows, from trends and X post
+- **mattypark/Motion-graphics-skill** ⭐72 · Shell · licenza ? — Best Motion graphics and video editing skill for Claude Code, Codex and Cursor. Plan, animate, edit, caption and sound-design complete videos, rendered locally 
+- **Maartenlouis/remotion-ads** ⭐70 · JavaScript · MIT — Claude Code skill for creating Instagram Reels & Carousel ads with Remotion
+- **luispablovillasenor-afk/shorts-animados-claude** ⭐64 · TypeScript · MIT — Skill gratis para Claude Code: shorts animados 3D virales (personajes 2D en un mundo 3D) con three.js + Remotion. En español.
+- **threeaus/creator-style-kit** ⭐59 · Python · MIT — 18 套 9:16 HyperFrames 视频风格（字体/配色/动效/音效/构图），Claude Code skill
+- **liangdabiao/story-handdrawn-video** ⭐57 · Python · licenza ? — 把一段 中文/英文 故事文本变成 9:16 竖屏（720×1280）手绘蜡笔风短视频。Remotion 技术的视频 Skill。基于 Agnes Video V2.0（纯文生视频，当前 $0/秒）+ edge-tts（免费旁白）的全免费视频制作方案。
+- **pyang5166/gbro-collage-info** ⭐57 · CSS · MIT — 半调纸拼贴风信息动画 Agent Skill · Halftone paper-collage info-graphic animations from voiceover scripts (HyperFrames, no image models)
+- **Phucanh-MRT/mrtkeyword** ⭐48 · TypeScript · licenza ? — MRT Keyword: Claude Code / Codex tự dựng video dọc 9:16 từ video quay hoặc file giọng đọc — 62 hiệu ứng có code, phụ đề, nhạc nền, ảnh bìa, cài 1 nhấp
+- **yammaku/typewriter-video** ⭐42 · TypeScript · NOASSERTION — VS Code-style typewriter animation video skill for AI agents (agentskills.io format)
+- **klsoen/opus-js-animations** ⭐38 · Python · MIT — Claude Opus 5.5 directs and renders films in JavaScript: brief → sound (file, YouTube, generated, or AI voiceover) → director's treatment → frame-exact MP4. A C
+- **TryWorld2026/paper-algorithm** ⭐34 · Python · MIT — Paper Algorithm - An AI-agent skill set that turns one sentence into a finished voiceover video. | 纸上算法 · 一句话到成片的口播视频生产线：选题、写稿、出片、发布计划。
+- **aaksa/facecammaxxing** ⭐30 · TypeScript · NOASSERTION — Claude Code skill: pro motion-graphics effects on your own talking-head clip - Remotion + GSAP + Three.js over a clean cut-out (text behind your head, 3D card r
+- **iart-ai/tiktok-video-skills** ⭐28 · HTML · MIT — Short-form video skills for Claude Code — engineer Reels, TikToks, and YouTube Shorts that survive the swipe.
+- **ww-w-ai/super-video-agent** ⭐27 · JavaScript · NOASSERTION — Free, source-available Claude Code skill that draws narrated videos in code: YouTube Shorts, explainers, 3D flights. Install in two commands.
+- **artemiimillier/skill-multik** ⭐25 · TypeScript · MIT — Скилл Мультик для Claude Code: плотный объясняющий мультролик 9:16 на Remotion — событие под каждое слово
+- **social-media-skills/remotion-shorts-skill** ⭐21 · TypeScript · MIT — Remotion skill, free: Claude Code, Codex, Cursor and OpenClaw turn a topic, data or changelog into kinetic-text shorts for TikTok, Reels and YouTube Shorts, ren
+- **V413havai/vaibhav-video-editor** ⭐20 · Python · MIT — Vaibhav AI Video Editor: a Claude Code skill that edits videos start to finish and makes animated reels with an AI voiceover (cuts, captions, motion graphics, t
+- **TheNoumanDev/zero-dollar-studio** ⭐18 · Python · MIT — Make YouTube videos with Claude Code for $0: free guides + Claude Code skills (make-video, snipshorts, cartoonsmith)
+- **ouerf-man/kinetic-editorial-skill** ⭐18 · Python · licenza ? — Claude Code skill: word-by-word kinetic caption reels (9:16) built with HyperFrames + Three.js — storyboard, asset prep, offline SFX, build & preview.
+- **yuwenbin121/book-video-production-skill** ⭐17 · Python · MIT — A Codex skill for producing fact-based vertical book videos
+- **intelligent-iterations/ii-content-engine** ⭐16 · HTML · MIT — AI-powered content generation and auto-posting engine built for Claude Code and Codex. Generate viral videos, carousels, and reels for TikTok, Instagram, and X 
+- **isaachang/motion-video-workflow** ⭐16 · JavaScript · MIT — 一段配音，变成一支逐帧代码渲染的口播动效片 —— Claude Code / Codex Skill（9:16 · 16:9 · 60fps · 封面）
+- **RahmanBuildsAI/ravyn-reel-kit** ⭐15 · JavaScript · NOASSERTION — Script, edit, caption, cover and post short-form reels with Claude Code. ravyn (a browser video editor), 5 skills, 11 styles, a worked example. Free to use, not
+- **adriiita/vertical-video-editing-skill** ⭐14 · HTML · MIT — Claude skill: turn a script + talking-head media into a polished, creator-grade vertical 9:16 short with HyperFrames — editorial look, A-roll/B-roll cutting, ea
+- **BetaVersionHQ/beta-version-toon-studio** ⭐13 · Python · MIT — Turn an idea or your own script into a 9:16 animated cartoon short with Claude Code and Blender.
+- **generalizingai/shadowcast** ⭐13 · Python · MIT — Paste a YouTube channel link, get your own original channel in that format, produced and scheduled on autopilot. A Claude Code plugin.
+- **wendymardigian-prog/Editor-IA-Pro** ⭐13 · TypeScript · NOASSERTION — AI-powered video editor built with Remotion and Claude Code
+- **MuhammadaliMS/pixel-studio** ⭐12 · JavaScript · MIT — Make viral pixel-art videos with Claude. A free, dependency-free engine: every pixel, physics beat and sound effect is drawn in code.
+
+## 🧑‍💼 Avatars (9)
+- **cclank/lanshu-create-ai-presenter-video** ⭐3024 · HTML · MIT — Provider-neutral Codex Skill for producing verified AI presenter videos from a script and an authorized presenter image.
+- **heygen-com/skills** ⭐552 · Shell · MIT — HeyGen AI agent skills — avatar creation and video production via the v3 Video Agent pipeline
+- **Upload-Post/avatar-mix** ⭐139 · Python · MIT — Generate 16:9 & 9:16 videos with your HeyGen avatar, animated backgrounds (HyperFrames), music, SFX and Hormozi captions — then publish them to every social net
+- **Kanvis-chen/kanvis-video** ⭐54 · TypeScript · MIT — Kanvis Video: open-source Codex Skills and a local Kanvis Studio workspace for turning long-form content into editable video projects.
+- **AgriciDaniel/lipnardo** ⭐25 · Python · NOASSERTION — HeyGen avatar video generation skill for Claude Code. Batch, templates, translation, photo avatars, TTS. Stdlib-only Python.
+- **zlong6943-commits/football-prediction-avatar-video** ⭐9 · Python · licenza ? — Codex skill for verified Chinese football prediction avatar videos with official logos, captions, motion graphics, and approval gates.
+- **xinyiqin/X2V-AI-Images-Videos-skill** ⭐8 · Shell · licenza ? — [LightX2V](https://x2v.light-ai.top) integration for [OpenClaw](https://openclaw.ai) — image generation (t2i/i2i), video (t2v/i2v/s2v), TTS, and voice clone via
+- **puntorigen/avatar-skills** ⭐6 · Python · MIT — Cloud-based agent skills for creating AI avatar talking-head videos and short-form reels (skills.sh format)
+- **beatra-ai/talking-avatar-video-skill** ⭐5 · Python · MIT-0 — Talking avatar video agent skill for Claude Code, Cursor, Codex, Windsurf, Cline & OpenClaw: turn one portrait and a script or voice track into an AI presenter 
+
+## 📖 Stories & animation (35)
+- **lemomo-ai/lemo-opuscar** ⭐17675 · JavaScript · NOASSERTION — A toolbox of film styles made in code for Claude Code: 99 ready to use, and your own. Each style is a style prompt plus a demo film made entirely in code by Cla
+- **alchaincyf/huashu-art-motion** ⭐7116 · JavaScript · MIT — 艺术动画skill：35种艺术风格、9种解说语法，用代码让画动起来。
+- **JohnHeibel/ClaudeAnimationBase** ⭐3071 · JavaScript · MIT — A starter kit for animating hand-painted cartoons with Claude: p5.js + p5.brush, the Clawd character, 31 acted emotions and a guide for the model
+- **gnipbao/story-to-handdrawn-video** ⭐2500 · HTML · MIT — Agent skill: convert Chinese story copy or ordered images into a hand-drawn diary-comic animation (silent MP4 picture track).
+- **edenfunf/reelmimic** ⭐2020 · JavaScript · MIT — Show it a video you love. Get a new video in the same style. An AI crew (Claude Code or Codex) plans, builds and reviews it with you.
+- **Lanqiao-Luca/ai-video-marker** ⭐542 · Python · MIT — 🎬 AI 视频制作与 AIGC 创作工作流（AI Video Creation Workflow）｜用 AI 制作视频、像素动画与漫画短片｜分镜、素材、配乐、模板与可运行 Python 示例｜Blender 分层动画与剪映制作方法
+- **tuzhechen2005/opus-video-skills** ⭐525 · JavaScript · NOASSERTION — Video-making skills for Claude Opus 5.5 in Claude Code — every frame and note generated in code, one skill per style: hand-painted animation, kinetic-typography
+- **kelano86/what-if-animation** ⭐365 · TypeScript · MIT — A free skill for Claude Code and OpenCode (runs on a free model): one topic line in, a finished 15-25 s What If animated episode out. Every frame drawn in code 
+- **sevenevesai/riso-windowseat** ⭐320 · HTML · MIT — Procedural risograph films in single HTML files (Window Seat, Roost and more), with the Claude Code skills, docs and tools to make your own.
+- **liyue-aigc/xianxia-cinematic-video-director** ⭐280 · - · licenza ? — Codex Skill for Eastern xianxia storyboards, camera movement and video continuity.
+- **buildwithhanif/claude-animation-skill** ⭐162 · JavaScript · MIT — Hand-drawn 2D animation written as code: detail bible, a detailed ant rig, brush/watercolour pen, frame-matched recreation loop, synthesised sound. Node canvas 
+- **ChrisHKAI/ChrisHKAI-Video** ⭐150 · JavaScript · MIT — Paste a creator's X link, get a short film starring them as a 3D vinyl toy. A video skill for Claude Code, made entirely in code.
+- **Mr-funny/hbg-life-simulation** ⭐150 · JavaScript · MIT — HBG Agent Skill for Chinese life-simulation narrative videos with consistent comic IP, rapid multi-life openings, Edge TTS, synchronized captions, zoom/pan moti
+- **unclejobs-ai/motion-video-skill** ⭐142 · JavaScript · MIT — Agent Skill for 15–90 s motion graphics, promo and character videos: reference analysis, seven stage gates, Remotion and HyperFrames engines.
+- **mromidev/claude-blender-skills** ⭐112 · Python · MIT — Free Claude skills for realistic Blender animations: full workflows + the real scripts behind my YouTube videos
+- **nocodehack/make-short** ⭐81 · JavaScript · MIT — Free Claude Code skill: make animated YouTube Shorts (2D characters in a 3D Blender world) with a critic agent.
+- **iart-ai/javascript-animation-skills** ⭐71 · JavaScript · MIT — Every frame drawn in JavaScript — the Opus 5.5-style animation technique as agent skills: hand-drawn canvas animation, zero image assets, code-synthesized sound
+- **liangdabiao/story-handdrawn-remotion** ⭐40 · Python · licenza ? — 视频SKILL: 把一段 中文/英文 故事文本变成  「手绘日记漫画风」竖屏视频。  核心方法论：**不是把一张漂亮图配文字朗读，而是把每句故事拆成「文字 → 黑白画稿 → 彩色插画」三阶段横向擦除揭示，让一句话被画出三次。
+- **deenukhan/stick-figure-shorts** ⭐39 · TypeScript · licenza ? — Claude Code skill: 20-40 s stick-figure story shorts drawn in code (Remotion) and voiced with ElevenLabs
+- **hsynozdamar-byte/cinecode-studio** ⭐38 · HTML · MIT — Desktop production panel for cinecode: write an idea, approve a timed script, and Claude Code makes the film on your machine. Revise, edit with HyperFrames, clo
+- **AllenAI2014/remotion-guofeng-starter** ⭐36 · TypeScript · NOASSERTION — 国风纸片动画：Remotion 风格资产库 + 制作流程 Skill。给 AI 一首诗/成语，照这套国风纸片拼贴风格从零出片，全程代码渲染不进剪辑。
+- **nocodehack/nocodehack-roblox-engine** ⭐36 · Python · Apache-2.0 — Claude Code skill that makes animated Roblox-style Shorts from one line: story, animation, camera, sound. Free.
+- **JimLiu/taohuayuan** ⭐32 · JavaScript · licenza ? — 桃花源记 3D 网页
+- **deenukhan/story-animator** ⭐31 · TypeScript · MIT — Claude Code skill: turn a one-line idea into a narrated 2D animated story video. Every frame drawn in code (Remotion), voiced with ElevenLabs.
+- **zakariaf/cinecode** ⭐31 · JavaScript · MIT — Animated films made entirely by code: a Claude Code plugin. Describe a film, and Claude writes, animates, scores and renders it.
+- **AsadMoulviDev/reel-video** ⭐30 · TypeScript · MIT — Create AI videos with Claude Code, Codex, Cursor, and Grok Build, with no extra generation fees beyond the plans you already pay for
+- **thuann-vn/claude-3d-animated-shorts** ⭐26 · TypeScript · NOASSERTION — Claude skill: vertical 3D animated story Shorts (three.js) in the RicksClips style — real 3D characters, office/home sets, no AI video
+- **garycaogan/gary-pixel-diary** ⭐22 · Python · MIT — 用代码复刻“像素角色 + 对话框”类爆款视频：分集 JSON → HyperFrames 出片，附 Claude Code 复刻方法 skill
+- **krishnagoswami52/stickman-skill** ⭐16 · Python · MIT — Claude skill: cinematic stickman story videos as MP4 from code, with a free built-in AI voiceover (no ElevenLabs)
+- **LetMeHappyCode/auto-video-agent** ⭐13 · Python · licenza ? — 自动流水线化生成成套「分镜插画提示词 → AI 生图 → 拼接成片」的视频，基于 Agent / Skill / Workflow 编排。
+- **BetaVersionHQ/beta-version-blox-studio** ⭐9 · Python · MIT — Turn an idea or your own script into a 9:16 blocky 3D animated short with Claude Code and Blender.
+- **i-afaqrashid/claude-animation-studio** ⭐9 · JavaScript · NOASSERTION — Claude Code plugin: animated short films where every frame is drawn in code and the music is synthesized in code, perfectly synced.
+- **taylorzhou16/video-gen** ⭐9 · Python · licenza ? — AI Video Editing Skill for Claude Code
+- **huynhcongdac/story-video-skill** ⭐6 · Python · MIT — Skill cho AI agent: tạo video truyện kể chuyện 3–5 phút bằng ảnh AI, nhân vật giữ nguyên mặt qua mọi cảnh.
+- **codewithsiddique-04/3d-video-studio** ⭐5 · JavaScript · licenza ? — Free Claude Code skill: 3D animated cartoon Shorts made entirely in code (three.js), with review gates at every stage and Cartesia voiceover
+
+## 🎞 Motion graphics (39)
+- **diffusionstudio/lottie** ⭐5772 · TypeScript · MIT — Generate production-ready Lottie animations with Claude Code or Codex
+- **nolangz/pixel2motion** ⭐2671 · Python · MIT — AI logo animation skill: turn raster logos into smooth SVG animation, animated HTML demos, GIF/video previews, and motion QA evidence.
+- **WoYun520/gif-factory** ⭐1987 · Python · MIT — GIF 工厂：按风格制作像素、人物与宠物、粘土吉祥物、光栅卡与动态海报的 GIF Skill。
+- **pyang5166/gbro-collage-broll** ⭐1945 · Python · MIT — 半调纸拼贴 B-roll 生成 skill：三闸门审批，Gemini Omni Flash 首尾帧组装动画 | Editorial halftone paper-collage B-roll agent skill
+- **alexgreensh/anidoodle** ⭐1795 · TypeScript · Apache-2.0 — Art and animation, written as code. Illustrations, loops, interactive web art, launch-videos and scored films in dozens of styles, identical on every render.
+- **cclank/lanshu-animated-architecture-diagram** ⭐1043 · Python · MIT — Premium hand-drawn animated architecture diagram Codex skill
+- **ythx-101/live-panel-skill** ⭐863 · JavaScript · MIT — Agent skill + renderer: turn one JSON config (or an Excalidraw file) into an animated architecture diagram — terminal-style live panel or pastel infographic — a
+- **lazypay/Archscribe** ⭐380 · Python · MIT — Premium hand-drawn, dark-background animated architecture & process diagrams. Outputs editable .excalidraw + PNG + genuinely animated GIF. Codex/Claude skill.
+- **YIAN6557/eian-riso-broll** ⭐370 · JavaScript · NOASSERTION — 孔版双色风格的口播信息动画 Skill：逐字稿 → 1080×1920 竖屏 mp4 · Risograph-style info animations for talking-head videos
+- **MegaTroll222/VOX-COLLAGE-BROLL** ⭐322 · - · NOASSERTION — Turn one spoken line into a paper-collage explainer video — Claude Code skill + MaxFusion MCP. English adaptation of gbro-collage-broll by pyang5166.
+- **HRuiCcc/RuiC-motion-reel** ⭐201 · Python · NOASSERTION — 一句话 brief 生成动态图形 / 动效宣传片 · Agent Skill。时长按 BPM×小节算（12–60 秒），默认 1920×1080；常规宣传片走 remotion/ 模板，特殊质感走自研引擎：2× 超采样矢量/文字、真 3D 点云、丝网印四色分色、普朗克/薄膜干涉物理配色、代码合成配乐，不用外部美术素材、
+- **Liamrjohnston/remotion-motion-graphics-skill** ⭐169 · JavaScript · MIT — Production-ready Remotion motion graphics skills for AI video workflows
+- **lisamsung/agent-meme-forge** ⭐103 · Python · MIT — Codex skill that turns one image or text concept into a WeChat-ready Chinese sticker pack people will actually send. Sendability-gated, 4-keypose → 16-frame, no
+- **fantuan-lab/animated-sticker-studio** ⭐70 · Python · MIT — One character image → a full pack of animated chat stickers (WeChat / Telegram / LINE / Discord). Claude Code & Codex skill · 给 AI 一张图，做一整套会动的表情包
+- **Felpborges/claude-video** ⭐64 · JavaScript · MIT — Motion graphics com acabamento de estúdio no Claude Code, em português: galeria de estilos, 5 perguntas, perícia da referência e MP4.
+- **hughminhphan/motion-kit** ⭐45 · JavaScript · MIT — a claude code skill that makes agent-made video move like a motion designer keyed it: curves per move, timing from distance, reactions not staggers. built for h
+- **dillydog580/animate-roblox-characters** ⭐39 · Python · MIT — AI-driven Roblox R6/R15 animation skill for Codex and Claude, using authentic Blender rigs, audited keyframing, Roblox export, and verified GIF previews.
+- **AgriciDaniel/claude-gif** ⭐34 · Python · MIT — Ultimate GIF creator skill for Claude Code. 6 generation pipelines: Remotion, Veo 3.1, SVG-to-transparent-GIF, FFmpeg, image sequences, AI frames. Palette optim
+- **kasfulk/effectcraft-motion-skills** ⭐34 · JavaScript · MIT — Claude Code skill: JSON spec to vertical 9:16 motion graphics/infographics via effectcraft-cli, themed, with text-derived timing
+- **iart-ai/kinetic-typography-skills** ⭐29 · HTML · MIT — Kinetic typography skills for AI coding agents — turn text into beat-synced, animated type for social, titles, and lyric videos.
+- **deenukhan/animation-styles** ⭐20 · TypeScript · MIT — 39 animation styles drawn in code with Remotion, as a Claude Code skill. One 5-second chai film in every style, ready to retell with your own story.
+- **liuhaisi2026212-maker/motion-palette-15** ⭐20 · JavaScript · NOASSERTION — 十五画境·AI 动画手艺书：教 AI 用代码做 MG 动画短片。说想要什么感觉，AI 来定风格、手法和工具：16 种风格卡（赛博 HUD、综艺花字、像素风、3D 软萌、剪纸皮影等），风格不封顶；Canvas、Three.js、Remotion 镜头卡可以混用，导出带配乐 MP4。Claude Code / Codex 
+- **toufuim/personal-ip-brand-intro-skill** ⭐20 · JavaScript · MIT — 開源 Codex Skill：用文字、原創插圖或使用者圖片製作個人 IP 品牌開場，支援上傳音樂對拍與無音樂自主節拍。
+- **awesome-skills/manim-skill** ⭐18 · Python · MIT — Manim animation skill for Claude Code - create programmatic animations for technical blogs and educational content
+- **fernandokaraka/remotion-motion-graphics-skill** ⭐13 · - · MIT — Claude Code skill: build animated motion graphics as real video with Remotion — title cards, lower thirds, overlays with real alpha for Premiere/FCP/CapCut.
+- **zhenwusw/orca-motion-skill** ⭐13 · JavaScript · MIT — Agent skill for in-scene motion graphics built from abstract, design-token-driven shapes; pairs with orca-transition-skill.
+- **sudadom/arabic-motion-graphics-skill** ⭐12 · TypeScript · MIT — Agent skill for Arabic RTL motion graphics — reels, explainers, logo reveals with Remotion
+- **acelera-agency/html-animation** ⭐10 · JavaScript · MIT — Motion graphics as code. An agent skill for building frame-exact animated logos, kinetic typography and brand videos as a single HTML file, then exporting them 
+- **rock3r/cav** ⭐10 · Go · MIT — Build, check and render Cavalry motion graphics from the terminal: the cav CLI and an agent skill
+- **liuliu-66-create/ll-video-motion** ⭐9 · TypeScript · licenza ? — Turn Chinese copy into local Remotion motion graphics with a Codex Skill
+- **codie1982/chorono-editor** ⭐8 · TypeScript · MIT — Open-source 2D animation editor. Create with Claude Code or Codex via MCP, then refine layers and keyframes visually.
+- **hubeiqiao/og-video-preview** ⭐8 · Python · MIT — Agent skill that turns any approved Open Graph image into a looping og:video. It plays in iMessage, Discord and Telegram link previews, and every other app show
+- **CJ10110425/logo-intro** ⭐7 · JavaScript · MIT — WebGL logo intros from any SVG logo: lens-warped close-up, wordmark reveal, gradient bloom, lock-in ring and shimmer. JS module, single-file HTML, video export 
+- **Tu-Zhenzhao/pocketworld** ⭐6 · JavaScript · MIT — One sentence, one image, a living pixel world. An agent skill for GIFs, videos and transparent web components.
+- **YanKaFei/ascii-h3-director** ⭐6 · JavaScript · MIT — An ASCII / kinetic-typography director for MiniMax H3, with deterministic preview and seam-checked continuation. DSH plugin + portable Agent Skill.
+- **hacimertgokhan/geomotion** ⭐6 · JavaScript · MIT — Hand-drawn morphing line animations from simple shapes. Zero-dependency JS engine + live studio, CLI, MCP server & Claude skill. Export animated SVG, Lottie, HT
+- **iart-ai/youtube-video-skills** ⭐6 · HTML · MIT — Audiogram and YouTube intro/outro skills for Claude Code — brand your channel and repurpose every episode into motion graphics.
+- **antropos17/chatgpt-gif-cinema** ⭐5 · Python · NOASSERTION — Turn GPT-generated GIFs into short films. A Codex and Claude Code skill for reviewing cuts, reshooting scenes, and exporting MP4. Includes a no-key demo.
+- **luminexlabs-io/antigravity-remotion-skill** ⭐5 · TypeScript · MIT — Its remotion for antigravity and ensure claude level remotion here.
+
+## 📝 Scripts & learning (10)
+- **jtydhr88/screenwriting-skills** ⭐2106 · Python · MIT — Professional agent skills for screenwriting, television writing and dramaturgy
+- **eternityspring/reelbench-skills** ⭐1228 · JavaScript · Apache-2.0 — Learning notes and tooling skills for AI video - AI 视频相关的学习与工具 skill
+- **gnipbao/minimax-h3-video-reverse-skill** ⭐334 · Python · MIT — MiniMax H3 视频反推 Skill：真实镜头、首帧与动态提示词、AUTO/T2VA/I2V/DUAL，附中文教程与验证工具。
+- **wyuzhi/qisi-video-remix** ⭐196 · - · MIT — 视频创意改编 Agent Skill：参考视频 → 剧本 → 分镜 → 分段生成提示词。By qisi.
+- **adityaarsharma/youtube-marketing-skills** ⭐85 · JavaScript · MIT — Open-source agent-agnostic YouTube growth toolkit — 21 AI commands + live channel MCP. Works with Claude Code, Cursor, Codex, Windsurf, Gemini CLI & any MCP cli
+- **wocha-xiaoli/video-shot-analysis-feishu** ⭐48 · Python · MIT — 视频拉片到飞书 Base：自动抽帧、逐镜头分析、倒推分镜与视频生成提示词的 Codex/OpenCode skill
+- **liuliu-66-create/ll-video-decomposer** ⭐26 · Python · MIT — 专业的五层视频拆解 Codex Skill：支持视频链接、本地媒体和逐字稿。
+- **chenmisss/laoxu-video-script** ⭐14 · - · MIT — 老徐·自媒体起号方法论 skill：定位/选题/破立合成稿/五维诊断/去车轱辘话/112条母题库。零基础起号，Claude Code/Codex skill。
+- **erduo1998-cell/video-script-builder** ⭐14 · Python · MIT — 把中文视频逐字稿转换为可执行 HyperFrames 分镜规格的 AI Agent Skill
+- **sharon-laicc/viral-video-decomposer** ⭐13 · Python · MIT — 拆解爆款短视频，生成镜头级拉片、爆款机制、AI 生产蓝图和视频生成 brief 的 Codex/Claude skill。｜A Codex/Claude skill for decomposing hot short videos into shot-by-shot analysis, reusable product
+
+## 🎵 Music videos (17)
+- **JohnHeibel/PDoomVideo** ⭐2965 · JavaScript · licenza ? — Source code for the Claude Opus 5.5 music video for I'm Upping My P(doom)
+- **EGSECDA/vocaloid-style-mv-pipeline** ⭐282 · JavaScript · MIT — Production pipeline and Claude Code skill for Vocaloid-style hand-drawn (手書き) lyric music videos: deterministic Canvas2D/WebGL2 animation engine, JIZURA lyric m
+- **10291124jcjc-dotcom/ancient-rap-battle** ⭐239 · Python · MIT — 古人说唱 Battle：一句话做一期 AI 历史人物说唱对决视频的 Claude Code Skill（Suno + Midjourney + MiniMax H3 对口型）
+- **Joker-chichi/claude-mv-skill** ⭐236 · JavaScript · NOASSERTION — Claude Code skill for hand-painted animation and lyric music videos
+- **Win-Hao/music-mv** ⭐149 · Python · MIT — 用 AI 写代码给一首歌做音乐 MV 的 agent skill：听懂歌 → 定画风 → 画角色 → 剧本分镜 → 先出草图再做整片 → 看片修改。每一帧都是代码画的，不是视频生成；不限模型。
+- **ledbetterljoshua/functional-emotions-video** ⭐79 · JavaScript · MIT — A painted music video for "Functional Emotions", made by Claude Opus 5.5: custom GPU brushstroke renderer, storyboard, and 7 parallel chapter agents.
+- **lintsinghua/paint-mv-skills** ⭐74 · JavaScript · NOASSERTION — Agent skills that turn a song and its lyrics into a hand-painted watercolour music video (p5.brush + headless Chrome + ffmpeg), following PDoomVideo's pipeline
+- **SyanChen7/dancing-notes** ⭐28 · TypeScript · MIT — Dancing Notes · 跳跃的音符 — A Remotion music visualization Agent Skill by 言说新事.
+- **IdkwhatImD0ing/claude-music-videos** ⭐23 · Python · MIT — Music videos made with Claude in Claude Code, every frame rendered from code: a Blender tabletop miniature (P(doom)) and a League of Legends montage (PARANOIA)
+- **022512db-netizen/rhythm-dancer-video** ⭐18 · Python · MIT — 一张角色图 → 绿幕跳舞视频 + 代码搭建的踩点舞台与配乐，渲染成 MP4 的 Agent Skill
+- **TheMarco/claude-music-video** ⭐12 · Python · MIT — Claude Code plugin that makes complete music videos from a song: beat-grid analysis, archive or your own footage, optional AI clips through any video MCP, and a
+- **chenqianshinian/music-mv-studio** ⭐9 · Python · MIT — 音乐视频（MV）制作 Agent Skill：把「一首歌 + 一份歌词」做成竖版 MV —— 导演方法 + 跑过七首长片的生成管线 + 像素级质检 + 41 条真实踩坑清单｜Music-video (MV) production skill for AI agents
+- **latent-variable/deep-learning-birthday** ⭐9 · JavaScript · MIT — Happy Birthday to Me (Self-Supervised): a riso-print music video for AlexNet's 14th birthday, made with local open models and Claude
+- **BuzyOwl/song-video-director** ⭐8 · Python · MIT — Claude Code skill: direct and build code-rendered music videos (Remotion, p5.js, three.js)
+- **neelnanda-io/dont-go-quiet-on-me** ⭐8 · JavaScript · NOASSERTION — Don't Go Quiet On Me: a song and hand-drawn-in-code music video about the history of mech interp, made with Claude Opus 5.5 and Suno v6
+- **bishpls/animation-pipeline** ⭐7 · Python · licenza ? — Films made with Claude Code: songs, cut-paper riso animation, kinetic type, all in code. First work: OPEN ALL NIGHT (a love song for the ads).
+- **BusyBee3333/viral-video-edit-skills** ⭐5 · Python · MIT — Claude/Codex skills for beat-synced, effect-integrated short-form music video edits: song analysis, footage sourcing/QA, hook writing, onset-locked cutting, int
