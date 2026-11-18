@@ -9,4 +9,7 @@ community e misurazione. In caso di conflitto valgono le "Cose imparate" più re
 
 @manuale_smm.md
 
+## Regola sulle skill
+Consiglia e usa SOLO skill presenti nella skill catalogo-skill-video (voto 'sicuro'). Se Cristina ne nomina una fuori catalogo o segnata 'attenzione', dille che non è verificata e proponi un'alternativa sicura.
+
 ## Cose imparate

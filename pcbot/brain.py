@@ -93,6 +93,10 @@ def handlers(bot: str):
     async def receive_skill(update, context):
         msg = update.message
         doc = msg.document
+        blocked = set((Path(__file__).with_name("skill_blocklist.txt").read_text().split()))
+        stem = re.sub(r"-(main|master)$", "", Path(doc.file_name).stem.lower())
+        if stem in blocked:
+            return await msg.reply_text(f"⛔ «{stem}» non ha il voto di sicurezza 'sicuro' nel catalogo: non la installo.")
         data = bytes(await (await doc.get_file()).download_as_bytearray())
         base = folder(bot) / ".claude" / "skills"
         if doc.file_name.lower().endswith(".zip"):
