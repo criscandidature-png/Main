@@ -3,7 +3,7 @@ import os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import storage, notion
+from pcbot import ai, storage, notion
 from pcbot.modules import system, screen, files
 
 NAME = "Max"
@@ -140,8 +140,10 @@ async def notion_cmd(update, context):
 
 
 # ---------- Chat libera con Claude (opzionale) ----------
-SYSTEM = ("Sei Max, l’assistente personale dell’utente (al femminile). Rispondi in italiano, in modo breve, "
+SYSTEM_BASE = ("Sei Max, l’assistente personale dell’utente (al femminile). Rispondi in italiano, in modo breve, "
           "pratico e cordiale. Se l'utente chiede un promemoria a orario, suggerisci il comando /ricorda. "
+          "Per salvare cose da fare suggerisci /todo, per le idee /nota.")
+SYSTEM = (SYSTEM_BASE + " "
           "Quando l'utente ti dice cose da fare, idee o fatti da ricordare, salvali su Notion con lo "
           "strumento aggiungi_notion senza chiedere conferma.")
 
@@ -156,15 +158,29 @@ NOTION_TOOL = {
 
 @restricted
 async def chat(update, context):
-    key = os.getenv("ANTHROPIC_API_KEY")
-    if not key:
-        return await update.message.reply_text("Per parlare liberamente con me aggiungi ANTHROPIC_API_KEY nel .env. "
-                                               "Intanto usa /aiuto.")
-    from anthropic import AsyncAnthropic
+    if not ai.available():
+        return await update.message.reply_text("Per parlare liberamente con me aggiungi GEMINI_API_KEY "
+                                               "(gratis) nel .env. Intanto usa /aiuto.")
     hist = context.chat_data.setdefault("hist", [])
     hist.append({"role": "user", "content": update.message.text})
     await update.message.chat.send_action("typing")
-    client = AsyncAnthropic(api_key=key)
+    try:
+        if os.getenv("ANTHROPIC_API_KEY"):
+            answer = await claude_with_notion(hist)
+        else:
+            answer = await ai.generate(SYSTEM_BASE + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", hist[-20:])
+    except Exception as e:
+        hist.pop()
+        return await update.message.reply_text(f"❌ {e}")
+    hist.append({"role": "assistant", "content": answer})
+    del hist[:-20]
+    await update.message.reply_text(answer[:4000])
+
+
+async def claude_with_notion(hist):
+    """Con Claude Max può salvare da sola su Notion."""
+    from anthropic import AsyncAnthropic
+    client = AsyncAnthropic()
     kw = dict(model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=1024,
               system=SYSTEM + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.")
     if notion.enabled():
@@ -173,7 +189,7 @@ async def chat(update, context):
     while True:
         resp = await client.messages.create(messages=msgs, **kw)
         if resp.stop_reason != "tool_use":
-            break
+            return "".join(b.text for b in resp.content if b.type == "text")
         msgs = msgs + [{"role": "assistant", "content": resp.content}]
         results = []
         for b in resp.content:
@@ -185,10 +201,6 @@ async def chat(update, context):
                     out = f"Errore: {e}"
                 results.append({"type": "tool_result", "tool_use_id": b.id, "content": out})
         msgs.append({"role": "user", "content": results})
-    answer = "".join(b.text for b in resp.content if b.type == "text")
-    hist.append({"role": "assistant", "content": answer})
-    del hist[:-20]
-    await update.message.reply_text(answer)
 
 
 HELP = f"""🧑‍💼 <b>Ciao, sono Max, la tua assistente!</b>

@@ -1,10 +1,10 @@
 """📱 Jess – social media manager: caption, hashtag, hook, idee, piano editoriale, post programmati."""
-import base64, os, re
+import re
 from datetime import datetime, timedelta
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import notion, storage
+from pcbot import ai, notion, storage
 
 NAME = "Jess"
 
@@ -28,19 +28,8 @@ def area(context):
 
 
 async def ask_claude(context, prompt, image: bytes | None = None, max_tokens=1500):
-    key = os.getenv("ANTHROPIC_API_KEY")
-    if not key:
-        raise RuntimeError("Per lavorare Jess ha bisogno di ANTHROPIC_API_KEY nel file .env.")
-    from anthropic import AsyncAnthropic
-    content = [{"type": "text", "text": prompt}]
-    if image:
-        content.insert(0, {"type": "image", "source": {"type": "base64", "media_type": "image/jpeg",
-                                                       "data": base64.b64encode(image).decode()}})
-    resp = await AsyncAnthropic(api_key=key).messages.create(
-        model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=max_tokens,
-        system=SYSTEM + BRAND[area(context)] + f" Oggi è {datetime.now():%A %d/%m/%Y}.",
-        messages=[{"role": "user", "content": content}])
-    return "".join(b.text for b in resp.content if b.type == "text")
+    return await ai.generate(SYSTEM + BRAND[area(context)] + f" Oggi è {datetime.now():%A %d/%m/%Y}.",
+                             [{"role": "user", "content": prompt}], image, max_tokens)
 
 
 async def reply_long(message, text):
