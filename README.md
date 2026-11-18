@@ -1,32 +1,41 @@
-# PC Bot – controlla il tuo PC da iPhone con Telegram
+# Il mio team di bot Telegram
 
-## Setup (sul PC da controllare)
-1. Su Telegram apri **@BotFather** → `/newbot` → copia il token.
-2. Apri **@userinfobot** per sapere il tuo user ID.
-3. Installa Python 3.10+, poi:
+| Bot | Ruolo |
+|---|---|
+| 🧑‍💼 **Max** | Assistente personale: promemoria, to-do, note, controllo del PC, chat libera (AI) |
+| 🎬 **Vivi** | Video editor: taglia, verticale 9:16, comprimi, velocità, testo, GIF, audio |
+| 📱 **Jess** | Social media manager – *in arrivo* |
+
+Tutti girano sul PC con un solo comando e rispondono solo al tuo ID Telegram.
+
+## Setup
+1. Su **@BotFather** crea due bot (`/newbot`): uno per Max e uno per Vivi. Copia i token.
+   Con `/setuserpic` e `/setdescription` puoi dare a ognuno foto e descrizione.
+2. Scopri il tuo ID con **@userinfobot**.
+3. Installa **Python 3.10+** e **FFmpeg** (Windows: `winget install ffmpeg`, Mac: `brew install ffmpeg`).
+4. Nella cartella del progetto:
    ```bash
    python -m venv venv
-   venv\Scripts\activate        # Windows  (macOS/Linux: source venv/bin/activate)
+   venv\Scripts\activate          # Mac/Linux: source venv/bin/activate
    pip install -r requirements.txt
-   copy .env.example .env       # e compila token + ID
+   copy .env.example .env         # poi compila token e ID
    python -m pcbot.main
    ```
-4. Dall'iPhone scrivi `/start` al tuo bot.
+5. Su iPhone scrivi `/start` a Max e a Vivi.
 
-## Comandi
-| Modulo | Comandi |
-|---|---|
-| Sistema | `/status`, `/processi`, `/kill`, `/power` (spegni/riavvia/blocca/sospendi) |
-| Schermo & Input | `/screen`, `/apri <url>`, `/app <nome>`, `/scrivi <testo>`, `/tasto <tasti>` |
-| File | `/ls`, `/get <file>`, invio file → salvato sul PC |
+## Max
+- `/ricorda 10m chiama mamma` · `/ricorda 18:30 palestra` · `/ricorda 25/12 09:00 auguri` · `/promemoria`
+- `/todo compra latte` · `/todo` · `/fatto 1` — `/nota idea` · `/nota` · `/cancella 1`
+- PC: `/status` `/processi` `/kill` `/power` `/screen` `/apri` `/app` `/scrivi` `/tasto` `/ls` `/get`
+- Messaggi liberi → risponde con Claude (serve `ANTHROPIC_API_KEY`, opzionale)
 
-## Aggiungere un nuovo "bot"
-Crea `pcbot/modules/nome.py` con `HANDLERS` e `HELP`, poi aggiungilo a `MODULES` in `main.py`.
+## Vivi
+Mandale un video (max 20 MB, limite Telegram) o usa `/pc Video/clip.mp4` per un file sul PC.
+Le modifiche si concatenano: es. `/taglia 0:05 0:30` → `/verticale` → `/testo Nuovo video!`
+Comandi: `/taglia` `/verticale` `/quadrato` `/comprimi` `/velocita 1.5` `/testo` `/muto` `/audio` `/gif` `/copertina`
+
+## Aggiungere un bot (es. Jess)
+Crea `pcbot/bots/jess.py` con `NAME`, `HANDLERS` e aggiungi `("JESS_TOKEN", jess)` a `TEAM` in `pcbot/main.py`.
 
 ## Avvio automatico (Windows)
-Crea un collegamento a `pythonw -m pcbot.main` (con cartella di avvio = progetto) in `shell:startup`.
-
-## Sicurezza
-- Solo gli ID in `ALLOWED_USERS` possono dare comandi.
-- Non condividere mai il file `.env`.
-- I file sono accessibili solo dentro `FILES_ROOT`.
+Collegamento a `venv\Scripts\pythonw.exe -m pcbot.main` (avvia in: cartella progetto) dentro `shell:startup`.

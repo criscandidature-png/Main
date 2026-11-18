@@ -1,41 +1,50 @@
-import logging
+"""Avvia tutti i bot del team (ognuno col suo token Telegram) in un unico processo."""
+import asyncio, logging, os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-import os
 from telegram import BotCommand
 from telegram.ext import Application, CommandHandler
-from pcbot.auth import restricted, ALLOWED
-from pcbot.modules import system, screen, files
+from pcbot.auth import ALLOWED
+from pcbot.bots import vivi, max as max_bot
 
-MODULES = {"Sistema": system, "Schermo & Input": screen, "File": files}
+# Per aggiungere Jess: crea pcbot/bots/jess.py e aggiungi ("JESS_TOKEN", jess) qui.
+TEAM = [("MAX_TOKEN", max_bot), ("VIVI_TOKEN", vivi)]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+log = logging.getLogger("team")
 
 
-@restricted
-async def start(update, context):
-    txt = "🤖 Controllo PC\n\n" + "\n\n".join(f"<b>{n}</b>\n{m.HELP}" for n, m in MODULES.items())
-    await update.message.reply_text(txt, parse_mode="HTML")
+async def build(token, bot):
+    app = Application.builder().token(token).build()
+    app.add_handlers(bot.HANDLERS)
+    await app.initialize()
+    cmds = sorted({c for h in bot.HANDLERS if isinstance(h, CommandHandler) for c in h.commands})
+    await app.bot.set_my_commands([BotCommand(c, c) for c in cmds if c not in ("start", "help")])
+    if hasattr(bot, "on_start"):
+        await bot.on_start(app)
+    await app.start()
+    await app.updater.start_polling()
+    log.info("✅ %s è online", bot.NAME)
+    return app
 
 
-async def post_init(app):
-    cmds = [BotCommand(h.commands and next(iter(h.commands)), "comando")
-            for m in MODULES.values() for h in m.HANDLERS if isinstance(h, CommandHandler)]
-    await app.bot.set_my_commands([BotCommand("start", "aiuto")] + cmds)
-
-
-def main():
-    token = os.environ["TELEGRAM_TOKEN"]
+async def run():
     if not ALLOWED:
         raise SystemExit("Imposta ALLOWED_USERS nel file .env")
-    app = Application.builder().token(token).post_init(post_init).build()
-    app.add_handler(CommandHandler(["start", "help"], start))
-    for m in MODULES.values():
-        app.add_handlers(m.HANDLERS)
-    app.run_polling()
+    apps = [await build(os.environ[k], b) for k, b in TEAM if os.getenv(k)]
+    if not apps:
+        raise SystemExit("Nessun token trovato nel .env")
+    try:
+        await asyncio.Event().wait()
+    finally:
+        for a in apps:
+            await a.updater.stop(); await a.stop(); await a.shutdown()
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        asyncio.run(run())
+    except KeyboardInterrupt:
+        pass
