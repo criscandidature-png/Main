@@ -1,5 +1,5 @@
 """🧑‍💼 Max – assistente personale: promemoria, note, to-do, controllo PC, chat con AI."""
-import os, re
+import html, os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
@@ -137,7 +137,11 @@ async def notion_cmd(update, context):
         await notion.db_id()
         await update.message.reply_text("✅ Notion collegato: trovi tutto nel database «🧑‍💼 Max».")
     except Exception as e:
-        await update.message.reply_text(f"❌ {e}")
+        t = str(e)
+        hint = ("Il token non è valido: ricopialo da notion.so/profile/integrations." if "401" in t else
+                "Max non vede la pagina: in Notion apri la pagina → ••• → Connessioni → aggiungi la tua integrazione."
+                if "404" in t or "403" in t else "Controlla NOTION_TOKEN e NOTION_PAGE_ID nel file .env.")
+        await update.message.reply_text(f"❌ Notion non risponde come dovrebbe.\n{hint}\n\nDettaglio: {t[:300]}")
 
 
 # ---------- Chat libera con Claude (opzionale) ----------
@@ -249,9 +253,9 @@ HELP = f"""🧑‍💼 <b>Ciao, sono Max, la tua assistente!</b>
 /notion – verifica collegamento
 
 <b>PC</b>
-{system.HELP}
-{screen.HELP}
-{files.HELP}
+{html.escape(system.HELP)}
+{html.escape(screen.HELP)}
+{html.escape(files.HELP)}
 
 Scrivimi anche in modo libero 💬""" + english.HELP + brain.HELP + updater.HELP
 

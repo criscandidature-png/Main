@@ -15,9 +15,21 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(mess
 log = logging.getLogger("team")
 
 
+async def on_error(update, context):
+    log.exception("Errore", exc_info=context.error)
+    msg = getattr(update, "effective_message", None)
+    if msg:
+        try:
+            await msg.reply_text(f"⚠️ Si è verificato un errore: {str(context.error)[:300]}\n"
+                                 "Se si ripete, manda uno screenshot a Claude.")
+        except Exception:
+            pass
+
+
 async def build(token, bot):
     app = Application.builder().token(token).concurrent_updates(True).build()
     app.add_handlers(bot.HANDLERS)
+    app.add_error_handler(on_error)
     for h, group in getattr(bot, "MENU_HANDLERS", []):
         app.add_handler(h, group)
     await app.initialize()
