@@ -287,6 +287,8 @@ def crea_sottotitoli(piano: dict, analisi: dict, fmt: dict, dest: Path) -> Path 
     st = fmt.get("sottotitoli", {})
     if not st.get("attivi"):
         return None
+    if st.get("stile") == "chiave":
+        return sottotitoli_chiave(piano, analisi, fmt, st, dest)
     allin = {"basso": 2, "centro": 5, "alto": 8}[st.get("posizione", "basso")]
     pos = ""
     if st.get("altezza_percento"):  # es. 65 = centro della scritta al 65% dell'altezza
@@ -322,6 +324,71 @@ Format: Layer, Start, End, Style, Text
             a = t0 + g[0]["s"] - c["s"]
             b = t0 + (parole[k + n]["s"] if k + n < len(parole) else g[-1]["e"]) - c["s"]
             righe.append(f"Dialogue: 0,{tempo_ass(a)},{tempo_ass(b)},S,{pos}{testo}")
+        t0 += c["e"] - c["s"]
+    dest.write_text(testa + "\n".join(righe) + "\n", encoding="utf-8")
+    return dest
+
+
+def sottotitoli_chiave(piano: dict, analisi: dict, fmt: dict, st: dict, dest: Path) -> Path:
+    """Stile dei reel personali di Cristina (chat «Editing video», 15-16/11/2026):
+    parole piccole bianche che compaiono una alla volta + PAROLA CHIAVE grande ARANCIONE (#FF7A1A),
+    corsivo spesso, con zoom-in e sfocatura che si toglie. Testo in alto nella safe zone, lontano dal viso."""
+    W, H = fmt["larghezza"], fmt["altezza"]
+    y = int(H * st.get("altezza_percento", 30) / 100)
+    chiave = colore_ass(st.get("colore_chiave", "#FF7A1A"))
+    testa = (
+        "[Script Info]\nScriptType: v4.00+\n"
+        f"PlayResX: {W}\nPlayResY: {H}\nWrapStyle: 0\n\n"
+        "[V4+ Styles]\n"
+        "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, "
+        "Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, "
+        "Alignment, MarginL, MarginR, MarginV, Encoding\n"
+        f"Style: S,{st.get('font_piccolo', 'Inter SemiBold')},{st.get('dimensione_piccolo', 58)},"
+        "&H00FFFFFF,&H0,&H00000000,&H90000000,0,0,0,0,100,100,0,0,1,0,2,5,40,40,0,1\n"
+        f"Style: K,{st.get('font', 'Inter Display Black')},{st.get('dimensione', 118)},"
+        f"{chiave},&H0,{chiave},&H0,1,1,0,0,100,100,-2,0,1,0,0,5,30,30,0,1\n\n"
+        "[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n")
+    STOP = {"che", "con", "per", "come", "sono", "della", "delle", "degli", "nella", "anche", "quando",
+            "quello", "quella", "questo", "questa", "dopo", "prima", "tutti", "tutto", "perché", "allora",
+            "quindi", "però", "ancora", "molto", "sempre", "neanche", "nemmeno", "mattina"}
+    pul = lambda t: re.sub(r"[.,;:!…]+", "", t)
+    forte = lambda w: len(pul(w)) >= 6 and pul(w).lower() not in STOP
+    per_id = {s["id"]: s for s in analisi["segmenti"]}
+    n = st.get("parole_per_riga", 5)
+    righe, t0 = [], 0.0
+    for c in piano["clip"]:
+        parole = [p for p in per_id[c["seg"]]["parole"]
+                  if p["s"] >= c["s"] - 0.01 and p["e"] <= c["e"] + 0.01]
+        gruppi, cur = [], []
+        for p in parole:  # ogni gruppo finisce su una parola "forte" o dopo n+2 parole
+            cur.append(p)
+            if (forte(p["w"]) and len(cur) >= 2) or len(cur) >= n + 2:
+                gruppi.append(cur)
+                cur = []
+        if cur:
+            if gruppi and len(cur) <= 2:
+                gruppi[-1] += cur
+            else:
+                gruppi.append(cur)
+        for gi, g in enumerate(gruppi):
+            idx = max(range(len(g)), key=lambda i: (forte(g[i]["w"]), i if forte(g[i]["w"]) else len(pul(g[i]["w"]))))
+            piccole, chiavi = g[:idx], g[idx:idx + 1]
+            fine = t0 + ((gruppi[gi + 1][0]["s"] if gi + 1 < len(gruppi) else g[-1]["e"]) - c["s"])
+            tk = t0 + chiavi[0]["s"] - c["s"]
+            ys = f"{{\\pos({W // 2},{y - 95})}}"
+            for i, p in enumerate(piccole):  # le piccole compaiono una alla volta
+                a = t0 + p["s"] - c["s"]
+                b = t0 + piccole[i + 1]["s"] - c["s"] if i + 1 < len(piccole) else max(tk, a + 0.05)
+                testo = " ".join(pul(x["w"]) for x in piccole[:i + 1]).lower()
+                righe.append(f"Dialogue: 0,{tempo_ass(a)},{tempo_ass(b)},S,,0,0,0,,{ys}{testo}")
+            if piccole:
+                testo = " ".join(pul(x["w"]) for x in piccole).lower()
+                righe.append(f"Dialogue: 0,{tempo_ass(tk)},{tempo_ass(fine)},S,,0,0,0,,{ys}{testo}")
+            parola = pul(chiavi[0]["w"]).upper()
+            fs = 118 if len(parola) <= 10 else max(64, int(118 * 10 / len(parola)))
+            righe.append(f"Dialogue: 1,{tempo_ass(tk)},{tempo_ass(fine)},K,,0,0,0,,"
+                         f"{{\\pos({W // 2},{y})\\fs{fs}\\fscx60\\fscy60\\blur8"
+                         f"\\t(0,200,\\fscx100\\fscy100\\blur0.6)}}{parola}")
         t0 += c["e"] - c["s"]
     dest.write_text(testa + "\n".join(righe) + "\n", encoding="utf-8")
     return dest

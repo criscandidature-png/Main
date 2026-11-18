@@ -42,14 +42,16 @@ formati:
     altezza: 1920
     durata_max: 60
     zoom: { attivo: true, fattore: 1.12, ogni: 2 }
+    # Stile dei reel personali (chat "Editing video" 15-16/11/2026, approvato da Cristina):
+    # parole piccole bianche una alla volta + PAROLA CHIAVE grande ARANCIONE (#FF7A1A, mai blu),
+    # corsivo spesso con zoom-in; testo in alto nella safe zone, lontano dal viso.
     sottotitoli:
       attivi: true
-      font: Arial Black
-      dimensione: 90
-      colore: "#FFE600"
-      bordo: "#000000"
-      spessore_bordo: 5
-      maiuscolo: true
-      parole_per_riga: 3
-      posizione: centro
-      margine_verticale: 450
+      stile: chiave
+      font: Inter Display Black
+      dimensione: 118
+      colore_chiave: "#FF7A1A"
+      font_piccolo: Inter SemiBold
+      dimensione_piccolo: 58
+      parole_per_riga: 5
+      altezza_percento: 30
