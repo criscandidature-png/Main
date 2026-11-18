@@ -16,6 +16,8 @@ import json
 import os
 import re
 import subprocess
+import shutil
+import tempfile
 import sys
 from pathlib import Path
 
@@ -159,6 +161,8 @@ def chiedi_a_claude(segmenti: list[dict], profilo: dict, formato: str, durata_ma
             "required": ["tieni", "hook"],
         },
     }
+    if not os.getenv("ANTHROPIC_API_KEY") and (exe := shutil.which("claude")):
+        return chiedi_a_claude_code(exe, sistema, strumento, righe)
     client = anthropic.Anthropic()
     r = client.messages.create(
         model=profilo["ai"].get("modello", "claude-haiku-5-5"),
@@ -170,6 +174,22 @@ def chiedi_a_claude(segmenti: list[dict], profilo: dict, formato: str, durata_ma
     )
     print(f"[piano] token: input {r.usage.input_tokens}, output {r.usage.output_tokens}")
     return next(b.input for b in r.content if b.type == "tool_use")
+
+
+def chiedi_a_claude_code(exe: str, sistema: str, strumento: dict, righe: str) -> dict:
+    """Stessa richiesta, ma tramite Claude Code (usa il tuo abbonamento Claude, nessuna API key)."""
+    sistema = sistema.replace("Rispondi solo usando lo strumento 'piano_montaggio'.",
+                              "Rispondi SOLO con un oggetto JSON valido, senza testo prima o dopo, "
+                              "con questo schema:\n" + json.dumps(strumento["input_schema"], ensure_ascii=False))
+    r = subprocess.run([exe, "-p", "--output-format", "text", "--append-system-prompt", sistema,
+                        "--max-turns", "1"], input=righe, capture_output=True, text=True,
+                       encoding="utf-8", timeout=600, cwd=tempfile.gettempdir())
+    testo = r.stdout
+    try:
+        return json.loads(testo[testo.index("{"):testo.rindex("}") + 1])
+    except ValueError:
+        print(f"[piano] Claude Code non ha dato un JSON valido: {(testo or r.stderr)[-300:]}")
+        return {"tieni": [], "hook": None}
 
 
 def taglia_dentro(seg: dict, cfg: dict) -> list[list[float]]:

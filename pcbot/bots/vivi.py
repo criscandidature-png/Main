@@ -4,6 +4,7 @@ from pathlib import Path
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
+from pcbot import ai
 
 NAME = "Vivi"
 WORK = Path(tempfile.gettempdir()) / "vivi"
@@ -166,7 +167,7 @@ async def auto_edit(message, context, fmt, preview):
         video = current(context)
         args = [sys.executable, str(EDITOR), "tutto", str(video), "--profilo", context.chat_data["stile"],
                 "--formato", fmt] + (["--anteprima"] if preview else []) + \
-               ([] if os.getenv("ANTHROPIC_API_KEY") else ["--senza-ai"])
+               ([] if os.getenv("ANTHROPIC_API_KEY") or ai.claude_code() else ["--senza-ai"])
         proc = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE,
                                                     stderr=asyncio.subprocess.STDOUT, cwd=EDITOR.parent)
         log = (await proc.communicate())[0].decode(errors="replace")

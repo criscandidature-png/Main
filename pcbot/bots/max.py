@@ -147,6 +147,30 @@ SYSTEM = (SYSTEM_BASE + " "
           "Quando l'utente ti dice cose da fare, idee o fatti da ricordare, salvali su Notion con lo "
           "strumento aggiungi_notion senza chiedere conferma.")
 
+SYSTEM_TAGS = (SYSTEM_BASE + " Quando l'utente ti dice cose da fare, idee o eventi da ricordare, "
+               "aggiungi in fondo alla risposta una riga per ognuno nel formato esatto "
+               "[[SALVA:todo:testo]] oppure [[SALVA:notes:testo]] oppure [[SALVA:log:testo]]. "
+               "Non usare strumenti.")
+
+
+async def save_tags(answer):
+    tags = re.findall(r"\[\[SALVA:(todo|notes|log):(.+?)\]\]", answer)
+    answer = re.sub(r"\s*\[\[SALVA:.+?\]\]", "", answer).strip()
+    saved = []
+    for kind, text in tags:
+        try:
+            if notion.enabled():
+                await notion.add(kind, text.strip())
+            elif kind in ("todo", "notes"):
+                storage.save(kind, storage.load(kind, []) + [text.strip()])
+            saved.append(text.strip())
+        except Exception:
+            pass
+    if saved:
+        answer += "\n\n💾 Salvato: " + "; ".join(saved)
+    return answer
+
+
 NOTION_TOOL = {
     "name": "aggiungi_notion",
     "description": "Salva un elemento nel database Notion dell'utente.",
@@ -168,7 +192,8 @@ async def chat(update, context):
         if os.getenv("ANTHROPIC_API_KEY"):
             answer = await claude_with_notion(hist)
         else:
-            answer = await ai.generate(SYSTEM_BASE + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", hist[-20:])
+            answer = await ai.generate(SYSTEM_TAGS + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", hist[-20:])
+            answer = await save_tags(answer)
     except Exception as e:
         hist.pop()
         return await update.message.reply_text(f"❌ {e}")
