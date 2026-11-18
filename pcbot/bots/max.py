@@ -3,7 +3,7 @@ import os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import ai, brain, storage, notion, updater
+from pcbot import ai, brain, english, storage, notion, updater
 from pcbot.modules import system, screen, files
 
 NAME = "Max"
@@ -189,7 +189,12 @@ async def chat(update, context):
     hist.append({"role": "user", "content": update.message.text})
     await update.message.chat.send_action("typing")
     try:
-        if os.getenv("ANTHROPIC_API_KEY"):
+        if english.prof().get("english_mode"):
+            answer = english.track_words(await ai.generate(
+                english.SYS + "ENGLISH MODE: rispondi solo in inglese semplice al livello " + english.prof()["livello"]
+                + " e in fondo aggiungi '🔧 Corrections' con max 3 errori di Cristina. Se impari parole nuove "
+                  "aggiungi la riga 'PAROLE: ...'.", hist[-20:], bot=NAME))
+        elif os.getenv("ANTHROPIC_API_KEY"):
             answer = await claude_with_notion(hist)
         else:
             answer = await ai.generate(SYSTEM_TAGS + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", hist[-20:], bot=NAME)
@@ -245,7 +250,7 @@ HELP = f"""🧑‍💼 <b>Ciao, sono Max, la tua assistente!</b>
 {screen.HELP}
 {files.HELP}
 
-Scrivimi anche in modo libero 💬""" + brain.HELP + updater.HELP
+Scrivimi anche in modo libero 💬""" + english.HELP + brain.HELP + updater.HELP
 
 
 @restricted
@@ -254,6 +259,7 @@ async def aiuto(update, context):
 
 
 async def on_start(app):
+    await english.on_start(app)
     for r in storage.load("reminders", []):
         schedule(app, r)
 
@@ -263,6 +269,6 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             CommandHandler("todo", _list_cmd("todo", "📝")), CommandHandler("fatto", _del_cmd("todo")),
             CommandHandler("nota", _list_cmd("notes", "🗒")), CommandHandler("cancella", _del_cmd("notes")),
             CommandHandler("diario", diario), CommandHandler("notion", notion_cmd),
-            *brain.handlers(NAME), *updater.HANDLERS,
+            *brain.handlers(NAME), *updater.HANDLERS, *english.HANDLERS,
             *system.HANDLERS, *screen.HANDLERS, *files.HANDLERS,
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]
