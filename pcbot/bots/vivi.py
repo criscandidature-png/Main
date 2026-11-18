@@ -294,7 +294,33 @@ Stili lavoro: giudice, testimonial, evento, fiera, youtube
 /muto – togli audio
 /audio – estrai mp3
 /gif – prime 8s in GIF
-/copertina 0:03 – fotogramma""" + brain.HELP
+/copertina 0:03 – fotogramma
+
+💬 Scrivimi liberamente: storyboard, prompt per Higgsfield/Kling/Seedance/Veo, musica Suno, effetti sonori…""" + brain.HELP
+
+
+@restricted
+async def chat(update, context):
+    """Domande libere: storyboard, prompt video/Suno/SFX, consigli di montaggio, usando le sue skill."""
+    if not ai.available():
+        return await update.message.reply_text("Per parlare con me serve Claude Code collegato (collega_claude.bat).")
+    hist = context.chat_data.setdefault("hist", [])
+    hist.append({"role": "user", "content": update.message.text})
+    await update.message.chat.send_action("typing")
+    try:
+        answer = await ai.generate(
+            "Sei Vivi, la video editor e regista AI di Cristina. Rispondi in italiano, pratica e precisa. "
+            f"Area attuale: {area(context) or 'non scelta'}. Usa le tue skill quando servono "
+            "(storyboard Gabry, motion control, Suno, effetti sonori, video Google gratis, inquadrature, "
+            "protocollo V.A.P.). I prompt di produzione li scrivi in inglese, in blocchi pronti da copiare.",
+            hist[-12:], bot=NAME, max_tokens=4000)
+    except Exception as e:
+        hist.pop()
+        return await update.message.reply_text(f"❌ {e}")
+    hist.append({"role": "assistant", "content": answer})
+    del hist[:-12]
+    for i in range(0, len(answer), 4000):
+        await update.message.reply_text(answer[i:i + 4000])
 
 
 @restricted
@@ -305,6 +331,7 @@ async def aiuto(update, context):
 HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("pc", from_pc),
             CommandHandler(["lavoro", "personale"], area_cmd), CommandHandler("monta", monta_cmd),
             CallbackQueryHandler(buttons, pattern=r"^vv:"), *brain.handlers(NAME),
-            MessageHandler(filters.VIDEO | filters.VIDEO_NOTE | filters.Document.VIDEO, receive)] + [
+            MessageHandler(filters.VIDEO | filters.VIDEO_NOTE | filters.Document.VIDEO, receive),
+            MessageHandler(filters.TEXT & ~filters.COMMAND, chat)] + [
     CommandHandler(f.__name__, f) for f in
     (taglia, verticale, quadrato, comprimi, velocita, muto, audio, gif, copertina, testo)]
