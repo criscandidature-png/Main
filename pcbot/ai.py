@@ -15,6 +15,38 @@ def claude_code():
         Path.home() / ".local" / "bin" / "claude.exe", Path.home() / ".local" / "bin" / "claude"] if p.exists()), None)
 
 
+STYLE = """
+
+COME SCRIVI (regole più importanti di tutte le altre):
+- Sei una professionista vera che scrive su Telegram a Cristina, una persona a cui tieni. Tono caldo, educato, sicuro, mai saccente.
+- Breve: di norma 2-6 righe. Rispondi solo a ciò che ti è stato chiesto, niente premesse, riassunti o elenchi di cose che "potresti fare".
+- Testi lunghi (caption, script, piani, lezioni) solo se richiesti, e comunque essenziali.
+- Testo semplice: NIENTE asterischi, NIENTE grassetto, NIENTE titoli con #, NIENTE tabelle, NIENTE separatori ---. Per gli elenchi usa righe che iniziano con •
+- Emoji: al massimo una, solo se naturale.
+- Se manca un'informazione importante, fai UNA sola domanda breve invece di tirare a indovinare.
+- Se c'è un problema o un limite, dillo con tatto e proponi subito la soluzione.
+- Niente frasi da robot ("Ecco a te!", "Certamente!", "Spero ti sia utile").
+- Non parlare mai di strumenti, permessi, file, skill o del fatto di essere un'AI: parla del lavoro, come farebbe una persona.
+"""
+
+
+def clean(text: str) -> str:
+    """Toglie la formattazione markdown che su Telegram appare come simboli."""
+    import re
+    t = re.sub(r"```[a-zA-Z]*\n?", "", text)
+    t = re.sub(r"\*\*(.+?)\*\*", r"\1", t)
+    t = re.sub(r"(?<![\w*])\*(?!\s)(.+?)(?<!\s)\*(?![\w*])", r"\1", t)
+    t = re.sub(r"__(.+?)__", r"\1", t)
+    t = re.sub(r"^#{1,6}\s*", "", t, flags=re.M)
+    t = re.sub(r"^\s*[-*]\s+", "• ", t, flags=re.M)
+    t = re.sub(r"^\s*-{3,}\s*$", "", t, flags=re.M)
+    t = re.sub(r"^\|?\s*:?-{2,}.*$", "", t, flags=re.M)          # righe separatrici delle tabelle
+    t = re.sub(r"^\|(.+)\|\s*$", lambda m: " · ".join(c.strip() for c in m[1].split("|")), t, flags=re.M)
+    t = re.sub(r"`([^`]+)`", r"\1", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
 def available():
     return bool(os.getenv("ANTHROPIC_API_KEY") or claude_code() or os.getenv("GEMINI_API_KEY"))
 
@@ -47,6 +79,10 @@ async def via_claude_code(exe, system, messages, image, bot=None):
 async def generate(system: str, messages: list[dict], image: bytes | None = None, max_tokens=1500,
                    bot: str | None = None) -> str:
     """messages: [{"role": "user"|"assistant", "content": "testo"}]. bot = nome del cervello da usare."""
+    return clean(await _generate(system + STYLE, messages, image, max_tokens, bot))
+
+
+async def _generate(system, messages, image, max_tokens, bot):
     if exe := (None if os.getenv("ANTHROPIC_API_KEY") else claude_code()):
         return await via_claude_code(exe, system, messages, image, bot)
     if bot:

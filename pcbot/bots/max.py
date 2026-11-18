@@ -219,14 +219,14 @@ async def claude_with_notion(hist):
     from anthropic import AsyncAnthropic
     client = AsyncAnthropic()
     kw = dict(model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=1024,
-              system=SYSTEM + brain.context_text(NAME) + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.")
+              system=SYSTEM + ai.STYLE + brain.context_text(NAME) + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.")
     if notion.enabled():
         kw["tools"] = [NOTION_TOOL]
     msgs = hist[-20:]
     while True:
         resp = await client.messages.create(messages=msgs, **kw)
         if resp.stop_reason != "tool_use":
-            return "".join(b.text for b in resp.content if b.type == "text")
+            return ai.clean("".join(b.text for b in resp.content if b.type == "text"))
         msgs = msgs + [{"role": "assistant", "content": resp.content}]
         results = []
         for b in resp.content:
