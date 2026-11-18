@@ -16,7 +16,7 @@ log = logging.getLogger("team")
 
 
 async def build(token, bot):
-    app = Application.builder().token(token).build()
+    app = Application.builder().token(token).concurrent_updates(True).build()
     app.add_handlers(bot.HANDLERS)
     await app.initialize()
     cmds = sorted({c for h in bot.HANDLERS if isinstance(h, CommandHandler) for c in h.commands})

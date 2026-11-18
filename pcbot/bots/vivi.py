@@ -1,5 +1,6 @@
 """🎬 Vivi – editor video. Mandale un video, poi dai un comando."""
 import asyncio, os, re, shutil, sys, tempfile, uuid
+from datetime import datetime
 from pathlib import Path
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
@@ -296,7 +297,59 @@ Stili lavoro: giudice, testimonial, evento, fiera, youtube
 /gif – prime 8s in GIF
 /copertina 0:03 – fotogramma
 
+🎨 /crea brief – creo un video da zero con il codice (motion graphics, titoli animati, spiegoni)
+
 💬 Scrivimi liberamente: storyboard, prompt per Higgsfield/Kling/Seedance/Veo, musica Suno, effetti sonori…""" + brain.HELP
+
+
+@restricted
+async def crea(update, context):
+    """/crea <brief> – Vivi scrive codice (Remotion, HyperFrames, ffmpeg…) e genera un video sul PC."""
+    brief = " ".join(context.args)
+    exe = ai.claude_code()
+    if not brief:
+        return await update.message.reply_text(
+            "Uso: /crea brief del video\nEs: /crea motion graphic 9:16 di 10 secondi con il titolo "
+            "«L'accoglienza è un protocollo», colori rosso, bordeaux e oro")
+    if not exe:
+        return await update.message.reply_text("Serve Claude Code collegato (collega_claude.bat).")
+    if context.chat_data.get("busy"):
+        return await update.message.reply_text("Sto già creando un video, aspetta che finisca 🙂")
+    proj = archivio(context) / "Progetti" / datetime.now().strftime("%Y%m%d_%H%M%S")
+    proj.mkdir(parents=True, exist_ok=True)
+    context.chat_data["busy"] = True
+    msg = await update.message.reply_text(f"🎨 Creo il video… può volerci da 5 a 30 minuti.\nCartella: {proj}")
+    prompt = (f"Brief di Cristina: {brief}\n\nCrea il video in questa cartella ({proj}). Usa le skill installate "
+              "nel tuo cervello se servono (consulta catalogo-skill-video, usa solo strumenti già presenti o "
+              "installabili con npm/npx dentro questa cartella). Node.js e ffmpeg sono disponibili. "
+              "Non toccare file fuori da questa cartella. Alla fine salva il video finale come final.mp4 "
+              "in questa cartella e rispondi con 2 righe: cosa hai fatto e cosa si può migliorare.")
+    try:
+        proc = await asyncio.create_subprocess_exec(
+            exe, "-p", "--output-format", "text", "--add-dir", str(brain.folder(NAME)),
+            "--append-system-prompt", "Sei Vivi, video editor e motion designer di Cristina. "
+            + brain.context_text(NAME)[-4000:],
+            "--allowedTools", "Bash,Write,Edit,Read,Glob,Grep,Skill", "--max-turns", "80",
+            cwd=proj, stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
+        out, err = await asyncio.wait_for(proc.communicate(prompt.encode("utf-8")), timeout=45 * 60)
+        report = out.decode("utf-8", errors="replace").strip()
+        videos = sorted(proj.rglob("*.mp4"), key=lambda p: (p.name != "final.mp4", -p.stat().st_mtime))
+        if videos:
+            v = videos[0]
+            if v.stat().st_size <= 50 * 2**20:
+                await update.message.reply_video(v.open("rb"), supports_streaming=True)
+            await update.message.reply_text(f"✅ {v}\n\n{report[-1500:]}")
+        else:
+            await update.message.reply_text("❌ Nessun video creato.\n" + (report or err.decode(errors="replace"))[-1500:])
+    except asyncio.TimeoutError:
+        proc.kill()
+        await update.message.reply_text(f"⏱ Ci ho messo troppo (45 min). Guarda la cartella {proj}")
+    except Exception as e:
+        await update.message.reply_text(f"❌ {e}")
+    finally:
+        context.chat_data["busy"] = False
+        await msg.delete()
 
 
 @restricted
@@ -330,6 +383,7 @@ async def aiuto(update, context):
 
 HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("pc", from_pc),
             CommandHandler(["lavoro", "personale"], area_cmd), CommandHandler("monta", monta_cmd),
+            CommandHandler("crea", crea),
             CallbackQueryHandler(buttons, pattern=r"^vv:"), *brain.handlers(NAME),
             MessageHandler(filters.VIDEO | filters.VIDEO_NOTE | filters.Document.VIDEO, receive),
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)] + [
