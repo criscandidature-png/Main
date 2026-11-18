@@ -161,7 +161,9 @@ def chiedi_a_claude(segmenti: list[dict], profilo: dict, formato: str, durata_ma
             "required": ["tieni", "hook"],
         },
     }
-    if not os.getenv("ANTHROPIC_API_KEY") and (exe := shutil.which("claude")):
+    exe = shutil.which("claude") or next((str(p) for p in (Path.home() / ".local" / "bin" / "claude.exe",
+                                                           Path.home() / ".local" / "bin" / "claude") if p.exists()), None)
+    if not os.getenv("ANTHROPIC_API_KEY") and exe:
         return chiedi_a_claude_code(exe, sistema, strumento, righe)
     client = anthropic.Anthropic()
     r = client.messages.create(
