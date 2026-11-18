@@ -140,7 +140,7 @@ async def notion_cmd(update, context):
 
 
 # ---------- Chat libera con Claude (opzionale) ----------
-SYSTEM = ("Sei Max, l'assistente personale dell'utente. Rispondi in italiano, in modo breve, "
+SYSTEM = ("Sei Max, l’assistente personale dell’utente (al femminile). Rispondi in italiano, in modo breve, "
           "pratico e cordiale. Se l'utente chiede un promemoria a orario, suggerisci il comando /ricorda. "
           "Quando l'utente ti dice cose da fare, idee o fatti da ricordare, salvali su Notion con lo "
           "strumento aggiungi_notion senza chiedere conferma.")
@@ -191,7 +191,7 @@ async def chat(update, context):
     await update.message.reply_text(answer)
 
 
-HELP = f"""🧑‍💼 <b>Ciao, sono Max, il tuo assistente!</b>
+HELP = f"""🧑‍💼 <b>Ciao, sono Max, la tua assistente!</b>
 
 <b>Promemoria</b>
 /ricorda 10m · 2h · 18:30 · 25/12 09:00 &lt;testo&gt;
