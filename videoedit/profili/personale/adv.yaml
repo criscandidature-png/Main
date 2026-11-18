@@ -1,0 +1,19 @@
+# STILE: PERSONALE / ADV — reel di vendita di @cristina.visual.merchandiser
+# (chat "Editing video" 15-16/11/2026, approvato da Cristina). SOLO per le ADV.
+base: personale
+ai:
+  istruzioni: |
+    Reel di VENDITA (ADV) per negozianti: hook sul problema concreto, tono di sicurezza,
+    una sola CTA finale: link in bio verso cristinaonline.it. Taglia tutto ciò che non porta alla vendita.
+formati:
+  "9:16":
+    sottotitoli:
+      attivi: true
+      stile: chiave
+      font: Inter Display Black
+      dimensione: 118
+      colore_chiave: "#FF7A1A"
+      font_piccolo: Inter SemiBold
+      dimensione_piccolo: 58
+      parole_per_riga: 5
+      altezza_percento: 30

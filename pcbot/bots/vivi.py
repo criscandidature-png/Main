@@ -115,7 +115,7 @@ async def ask_style(message, context):
         rows = [[(s.capitalize(), f"vv:stile:lavoro/{s}") for s in STILI_LAVORO[i:i + 3]] for i in (0, 3)]
         rows.append([("Base lavoro", "vv:stile:lavoro")])
     else:
-        rows = [[("Personale", "vv:stile:personale")]]
+        rows = [[("Personale", "vv:stile:personale"), ("📣 ADV (vendita)", "vv:stile:personale/adv")]]
     rows.append([("✂️ Modifica a mano (/aiuto)", "vv:manuale")])
     await message.reply_text("Che stile uso per il montaggio automatico?", reply_markup=kb(rows))
 
