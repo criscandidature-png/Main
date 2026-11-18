@@ -1,10 +1,41 @@
-"""Testo generato da AI: usa Claude se c'è ANTHROPIC_API_KEY, altrimenti Google Gemini (gratis)."""
-import base64, os
+"""Testo generato da AI. Ordine di scelta:
+1. ANTHROPIC_API_KEY  → API di Claude (a pagamento)
+2. Claude Code installato e collegato al tuo abbonamento Claude (USE_CLAUDE_CODE=1, default se trovato)
+3. GEMINI_API_KEY     → Google Gemini (gratis)
+"""
+import asyncio, base64, os, shutil, tempfile
+from pathlib import Path
 import httpx
 
 
+def claude_code():
+    if os.getenv("USE_CLAUDE_CODE", "1") == "0":
+        return None
+    return shutil.which("claude") or next((str(p) for p in [
+        Path.home() / ".local" / "bin" / "claude.exe", Path.home() / ".local" / "bin" / "claude"] if p.exists()), None)
+
+
 def available():
-    return bool(os.getenv("ANTHROPIC_API_KEY") or os.getenv("GEMINI_API_KEY"))
+    return bool(os.getenv("ANTHROPIC_API_KEY") or claude_code() or os.getenv("GEMINI_API_KEY"))
+
+
+async def via_claude_code(exe, system, messages, image):
+    """Chiama `claude -p` (modalità non interattiva), usa il login del tuo abbonamento."""
+    convo = "\n\n".join(("Utente: " if m["role"] == "user" else "Tu: ") + m["content"] for m in messages[:-1])
+    prompt = (f"Conversazione precedente:\n{convo}\n\n" if convo else "") + messages[-1]["content"]
+    cwd = tempfile.mkdtemp(prefix="bot_ai_")
+    if image:
+        (Path(cwd) / "foto.jpg").write_bytes(image)
+        prompt = "Guarda l'immagine foto.jpg in questa cartella (usa lo strumento Read). " + prompt
+    args = [exe, "-p", "--output-format", "text", "--append-system-prompt", system,
+            "--allowedTools", "Read" if image else "", "--max-turns", "3"]
+    proc = await asyncio.create_subprocess_exec(*args, cwd=cwd, stdin=asyncio.subprocess.PIPE,
+                                                stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    out, err = await asyncio.wait_for(proc.communicate(prompt.encode("utf-8")), timeout=300)
+    shutil.rmtree(cwd, ignore_errors=True)
+    if proc.returncode:
+        raise RuntimeError(f"Claude Code: {(err or out).decode(errors='replace')[-300:]}")
+    return out.decode("utf-8", errors="replace").strip()
 
 
 async def generate(system: str, messages: list[dict], image: bytes | None = None, max_tokens=1500) -> str:
@@ -20,9 +51,12 @@ async def generate(system: str, messages: list[dict], image: bytes | None = None
                                                    max_tokens=max_tokens, system=system, messages=msgs)
         return "".join(b.text for b in r.content if b.type == "text")
 
+    if exe := claude_code():
+        return await via_claude_code(exe, system, messages, image)
+
     key = os.getenv("GEMINI_API_KEY")
     if not key:
-        raise RuntimeError("Serve una chiave AI nel file .env: GEMINI_API_KEY (gratis su aistudio.google.com).")
+        raise RuntimeError("Nessuna AI disponibile: installa Claude Code e fai il login, oppure metti GEMINI_API_KEY nel .env.")
     contents = [{"role": "model" if m["role"] == "assistant" else "user", "parts": [{"text": m["content"]}]}
                 for m in messages]
     if image:
