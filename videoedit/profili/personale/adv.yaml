@@ -17,3 +17,19 @@ formati:
       dimensione_piccolo: 58
       parole_per_riga: 5
       altezza_percento: 30
+  # 4:5 (1080x1350) per il feed: SOLO nelle ADV
+  "4:5":
+    larghezza: 1080
+    altezza: 1350
+    durata_max: 60
+    zoom: { attivo: true, fattore: 1.12, ogni: 2 }
+    sottotitoli:
+      attivi: true
+      stile: chiave
+      font: Inter Display Black
+      dimensione: 104
+      colore_chiave: "#FF7A1A"
+      font_piccolo: Inter SemiBold
+      dimensione_piccolo: 52
+      parole_per_riga: 5
+      altezza_percento: 28

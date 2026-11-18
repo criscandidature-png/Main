@@ -11,7 +11,7 @@ Profilo: @cristina.visual.merchandiser (visual merchandising, SOS NATALE, manual
 - Barrato rosso animato e cerchio disegnato per smentire o evidenziare; freccia bianca stile gesso su lavagna con scritta a mano per indicare oggetti (es. «la tua vetrina»).
 - Zoom sulle frasi forti, zoom out finale, 2 transizioni con sfocatura.
 - Effetti sonori a volume basso: "pop" sulle parole arancioni, "whoosh" sulle bianche grandi e sulle transizioni, gesso/pennarello su freccia, barrato e cerchio.
-- Esportazione 1080x1920 (o 1440p se l'originale lo permette); anche 4:5 per il feed su richiesta.
+- Esportazione 1080x1920 (o 1440p se l'originale lo permette). Il 4:5 (1080x1350, feed) si usa SOLO nelle ADV, mai negli altri reel.
 - Reel di vendita: hook sul problema concreto («ancora spendi in decorazioni di Natale invece che imparare a vendere con la tua vetrina?»), tono di sicurezza, chiusura con link in bio verso cristinaonline.it. Dagli insight: senza mostrarsi in video (tutto in AI) funziona meglio; voce con ElevenLabs, enfasi da indicare; clip Higgsfield Kling 9:16 1080p, max 3 s per clip.
 - Su CapCut: due tracce di sottotitoli separate (CHIAVE e PICCOLI) importabili da .srt.
 

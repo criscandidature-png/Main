@@ -151,8 +151,11 @@ async def buttons(update, context):
         await q.edit_message_text(HELP, parse_mode="HTML")
     elif kind == "stile":
         context.chat_data["stile"] = val
+        fmts = [("📱 9:16", "vv:fmt:9:16"), ("🖥 16:9", "vv:fmt:16:9"), ("Come l'originale", "vv:fmt:auto")]
+        if val == "personale/adv":  # il 4:5 solo nelle ADV, e niente 16:9
+            fmts = [("📱 9:16", "vv:fmt:9:16"), ("🖼 4:5 feed", "vv:fmt:4:5")]
         await q.edit_message_text(f"Stile: {val} ✔︎\nFormato?", reply_markup=kb([
-            [("📱 9:16", "vv:fmt:9:16"), ("🖥 16:9", "vv:fmt:16:9"), ("Come l'originale", "vv:fmt:auto")],
+            fmts,
             [("⚡ Anteprima veloce 480p", "vv:fmt:prev")]]))
     elif kind == "fmt":
         prev = val == "prev"

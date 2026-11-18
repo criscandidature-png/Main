@@ -465,7 +465,7 @@ def main() -> None:
     ap.add_argument("comando", choices=["analizza", "pianifica", "renderizza", "tutto"])
     ap.add_argument("video", type=Path)
     ap.add_argument("--profilo", required=True, help="lavoro | personale | (altri in profili/)")
-    ap.add_argument("--formato", choices=["16:9", "9:16", "auto"], default="auto",
+    ap.add_argument("--formato", choices=["16:9", "9:16", "4:5", "auto"], default="auto",
                     help="formato di uscita (auto = come il video originale)")
     ap.add_argument("--senza-ai", action="store_true", help="solo regole, zero crediti")
     ap.add_argument("--anteprima", action="store_true", help="render veloce a 480p")
