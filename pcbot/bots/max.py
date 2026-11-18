@@ -3,7 +3,7 @@ import os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import ai, storage, notion
+from pcbot import ai, brain, storage, notion, updater
 from pcbot.modules import system, screen, files
 
 NAME = "Max"
@@ -192,7 +192,7 @@ async def chat(update, context):
         if os.getenv("ANTHROPIC_API_KEY"):
             answer = await claude_with_notion(hist)
         else:
-            answer = await ai.generate(SYSTEM_TAGS + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", hist[-20:])
+            answer = await ai.generate(SYSTEM_TAGS + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", hist[-20:], bot=NAME)
             answer = await save_tags(answer)
     except Exception as e:
         hist.pop()
@@ -207,7 +207,7 @@ async def claude_with_notion(hist):
     from anthropic import AsyncAnthropic
     client = AsyncAnthropic()
     kw = dict(model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=1024,
-              system=SYSTEM + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.")
+              system=SYSTEM + brain.context_text(NAME) + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.")
     if notion.enabled():
         kw["tools"] = [NOTION_TOOL]
     msgs = hist[-20:]
@@ -245,7 +245,7 @@ HELP = f"""🧑‍💼 <b>Ciao, sono Max, la tua assistente!</b>
 {screen.HELP}
 {files.HELP}
 
-Scrivimi anche in modo libero 💬"""
+Scrivimi anche in modo libero 💬""" + brain.HELP + updater.HELP
 
 
 @restricted
@@ -263,5 +263,6 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             CommandHandler("todo", _list_cmd("todo", "📝")), CommandHandler("fatto", _del_cmd("todo")),
             CommandHandler("nota", _list_cmd("notes", "🗒")), CommandHandler("cancella", _del_cmd("notes")),
             CommandHandler("diario", diario), CommandHandler("notion", notion_cmd),
+            *brain.handlers(NAME), *updater.HANDLERS,
             *system.HANDLERS, *screen.HANDLERS, *files.HANDLERS,
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]

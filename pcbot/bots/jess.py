@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import ai, notion, storage
+from pcbot import ai, brain, notion, storage
 
 NAME = "Jess"
 
@@ -29,7 +29,7 @@ def area(context):
 
 async def ask_claude(context, prompt, image: bytes | None = None, max_tokens=1500):
     return await ai.generate(SYSTEM + BRAND[area(context)] + f" Oggi è {datetime.now():%A %d/%m/%Y}.",
-                             [{"role": "user", "content": prompt}], image, max_tokens)
+                             [{"role": "user", "content": prompt}], image, max_tokens, bot=NAME)
 
 
 async def reply_long(message, text):
@@ -176,7 +176,7 @@ Lavoro su due profili: /lavoro (Stefania, Madrina dell'Accoglienza) o /personale
 /programma 25/11 18:00 testo – ti avviso quando pubblicare
 /risposta testo – risposte a commenti e DM
 
-Oppure scrivimi liberamente 💬"""
+Oppure scrivimi liberamente 💬""" + brain.HELP
 
 
 @restricted
@@ -196,5 +196,6 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             CommandHandler("hook", hook), CommandHandler("idee", idee), CommandHandler("script", script),
             CommandHandler("risposta", risposta), CommandHandler("piano", piano),
             CommandHandler("programma", programma),
+            *brain.handlers(NAME),
             MessageHandler(filters.PHOTO, photo),
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]

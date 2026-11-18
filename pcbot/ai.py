@@ -19,27 +19,39 @@ def available():
     return bool(os.getenv("ANTHROPIC_API_KEY") or claude_code() or os.getenv("GEMINI_API_KEY"))
 
 
-async def via_claude_code(exe, system, messages, image):
+async def via_claude_code(exe, system, messages, image, bot=None):
     """Chiama `claude -p` (modalità non interattiva), usa il login del tuo abbonamento."""
     convo = "\n\n".join(("Utente: " if m["role"] == "user" else "Tu: ") + m["content"] for m in messages[:-1])
     prompt = (f"Conversazione precedente:\n{convo}\n\n" if convo else "") + messages[-1]["content"]
-    cwd = tempfile.mkdtemp(prefix="bot_ai_")
+    tmp = tempfile.mkdtemp(prefix="bot_ai_")
+    if bot:  # nella cartella del cervello Claude Code carica CLAUDE.md e le skill
+        from pcbot import brain
+        cwd = str(brain.folder(bot))
+    else:
+        cwd = tmp
     if image:
-        (Path(cwd) / "foto.jpg").write_bytes(image)
-        prompt = "Guarda l'immagine foto.jpg in questa cartella (usa lo strumento Read). " + prompt
+        foto = Path(tmp) / "foto.jpg"
+        foto.write_bytes(image)
+        prompt = f"Guarda l'immagine {foto} (usa lo strumento Read). " + prompt
     args = [exe, "-p", "--output-format", "text", "--append-system-prompt", system,
-            "--allowedTools", "Read" if image else "", "--max-turns", "3"]
+            "--allowedTools", "Read,Skill,Glob", "--add-dir", tmp, "--max-turns", "8"]
     proc = await asyncio.create_subprocess_exec(*args, cwd=cwd, stdin=asyncio.subprocess.PIPE,
                                                 stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
     out, err = await asyncio.wait_for(proc.communicate(prompt.encode("utf-8")), timeout=300)
-    shutil.rmtree(cwd, ignore_errors=True)
+    shutil.rmtree(tmp, ignore_errors=True)
     if proc.returncode:
         raise RuntimeError(f"Claude Code: {(err or out).decode(errors='replace')[-300:]}")
     return out.decode("utf-8", errors="replace").strip()
 
 
-async def generate(system: str, messages: list[dict], image: bytes | None = None, max_tokens=1500) -> str:
-    """messages: [{"role": "user"|"assistant", "content": "testo"}]"""
+async def generate(system: str, messages: list[dict], image: bytes | None = None, max_tokens=1500,
+                   bot: str | None = None) -> str:
+    """messages: [{"role": "user"|"assistant", "content": "testo"}]. bot = nome del cervello da usare."""
+    if exe := (None if os.getenv("ANTHROPIC_API_KEY") else claude_code()):
+        return await via_claude_code(exe, system, messages, image, bot)
+    if bot:
+        from pcbot import brain
+        system += brain.context_text(bot)
     if os.getenv("ANTHROPIC_API_KEY"):
         from anthropic import AsyncAnthropic
         msgs = [dict(m) for m in messages]
@@ -50,9 +62,6 @@ async def generate(system: str, messages: list[dict], image: bytes | None = None
         r = await AsyncAnthropic().messages.create(model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"),
                                                    max_tokens=max_tokens, system=system, messages=msgs)
         return "".join(b.text for b in r.content if b.type == "text")
-
-    if exe := claude_code():
-        return await via_claude_code(exe, system, messages, image)
 
     key = os.getenv("GEMINI_API_KEY")
     if not key:

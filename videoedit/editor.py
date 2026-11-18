@@ -138,6 +138,7 @@ def chiedi_a_claude(segmenti: list[dict], profilo: dict, formato: str, durata_ma
         "(id|inizio-fine secondi|testo). Scegli quali frasi tenere per un montaggio efficace. "
         "Non riscrivere il testo. Rispondi solo usando lo strumento 'piano_montaggio'.\n\n"
         f"STILE ({profilo['nome']}, formato {formato}):\n{profilo['ai']['istruzioni']}\n"
+        + os.getenv("BOT_MEMORIA", "") + "\n"
         + (f"Durata finale massima: {durata_max} secondi.\n" if durata_max else "")
     )
     strumento = {
@@ -185,7 +186,7 @@ def chiedi_a_claude_code(exe: str, sistema: str, strumento: dict, righe: str) ->
                               "con questo schema:\n" + json.dumps(strumento["input_schema"], ensure_ascii=False))
     r = subprocess.run([exe, "-p", "--output-format", "text", "--append-system-prompt", sistema,
                         "--max-turns", "1"], input=righe, capture_output=True, text=True,
-                       encoding="utf-8", timeout=600, cwd=tempfile.gettempdir())
+                       encoding="utf-8", timeout=600, cwd=os.getenv("BOT_CERVELLO") or tempfile.gettempdir())
     testo = r.stdout
     try:
         return json.loads(testo[testo.index("{"):testo.rindex("}") + 1])

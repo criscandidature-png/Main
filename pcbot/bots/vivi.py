@@ -4,7 +4,7 @@ from pathlib import Path
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import ai
+from pcbot import ai, brain
 
 NAME = "Vivi"
 WORK = Path(tempfile.gettempdir()) / "vivi"
@@ -168,7 +168,8 @@ async def auto_edit(message, context, fmt, preview):
         args = [sys.executable, str(EDITOR), "tutto", str(video), "--profilo", context.chat_data["stile"],
                 "--formato", fmt] + (["--anteprima"] if preview else []) + \
                ([] if os.getenv("ANTHROPIC_API_KEY") or ai.claude_code() else ["--senza-ai"])
-        proc = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE,
+        env = dict(os.environ, BOT_CERVELLO=str(brain.folder(NAME)), BOT_MEMORIA=brain.context_text(NAME))
+        proc = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE, env=env,
                                                     stderr=asyncio.subprocess.STDOUT, cwd=EDITOR.parent)
         log = (await proc.communicate())[0].decode(errors="replace")
         m = re.search(r"\[fatto\] (.+\.mp4)", log)
@@ -293,7 +294,7 @@ Stili lavoro: giudice, testimonial, evento, fiera, youtube
 /muto – togli audio
 /audio – estrai mp3
 /gif – prime 8s in GIF
-/copertina 0:03 – fotogramma"""
+/copertina 0:03 – fotogramma""" + brain.HELP
 
 
 @restricted
@@ -303,7 +304,7 @@ async def aiuto(update, context):
 
 HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("pc", from_pc),
             CommandHandler(["lavoro", "personale"], area_cmd), CommandHandler("monta", monta_cmd),
-            CallbackQueryHandler(buttons, pattern=r"^vv:"),
+            CallbackQueryHandler(buttons, pattern=r"^vv:"), *brain.handlers(NAME),
             MessageHandler(filters.VIDEO | filters.VIDEO_NOTE | filters.Document.VIDEO, receive)] + [
     CommandHandler(f.__name__, f) for f in
     (taglia, verticale, quadrato, comprimi, velocita, muto, audio, gif, copertina, testo)]
