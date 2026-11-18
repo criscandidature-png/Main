@@ -29,6 +29,16 @@ Tutti girano sul PC con un solo comando e rispondono solo al tuo ID Telegram.
 - PC: `/status` `/processi` `/kill` `/power` `/screen` `/apri` `/app` `/scrivi` `/tasto` `/ls` `/get`
 - Messaggi liberi → risponde con Claude (serve `ANTHROPIC_API_KEY`, opzionale)
 
+### Collegare Notion
+1. Vai su https://www.notion.so/profile/integrations → **Nuova integrazione** (interna) → copia il token in `NOTION_TOKEN`.
+2. In Notion crea una pagina (es. "Max"), menu `•••` → **Connessioni** → aggiungi la tua integrazione.
+3. Copia il link della pagina in `NOTION_PAGE_ID`.
+4. Riavvia e scrivi `/notion` a Max: creerà il database «🧑‍💼 Max» (Nome, Tipo, Fatto, Data).
+
+Da quel momento to-do, note, promemoria e `/diario` finiscono su Notion; `/todo` legge da Notion,
+quindi se spunti "Fatto" in Notion sparisce anche dalla lista di Max. Nella chat libera Max
+salva da sola le cose importanti che le dici.
+
 ## Vivi
 Mandale un video (max 20 MB, limite Telegram) o usa `/pc Video/clip.mp4` per un file sul PC.
 Le modifiche si concatenano: es. `/taglia 0:05 0:30` → `/verticale` → `/testo Nuovo video!`

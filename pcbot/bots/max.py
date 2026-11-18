@@ -3,7 +3,7 @@ import os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import storage
+from pcbot import storage, notion
 from pcbot.modules import system, screen, files
 
 NAME = "Max"
@@ -24,6 +24,11 @@ def parse_when(s: str):
 async def fire(context):
     job = context.job
     await context.bot.send_message(job.chat_id, f"⏰ Promemoria: {job.data['text']}")
+    if job.data.get("notion"):
+        try:
+            await notion.done(job.data["notion"])
+        except Exception:
+            pass
     rems = [r for r in storage.load("reminders", []) if r["id"] != job.data["id"]]
     storage.save("reminders", rems)
 
@@ -51,6 +56,11 @@ async def ricorda(update, context):
             "Uso: /ricorda 10m chiama mamma · /ricorda 18:30 palestra · /ricorda 25/12 09:00 auguri")
     r = {"id": int(datetime.now().timestamp() * 1000), "chat": update.effective_chat.id,
          "at": when.isoformat(), "text": text}
+    if notion.enabled():
+        try:
+            r["notion"] = await notion.add("reminders", text, when)
+        except Exception as e:
+            await update.message.reply_text(f"⚠️ Notion: {e}")
     storage.save("reminders", storage.load("reminders", []) + [r])
     schedule(context.application, r)
     await update.message.reply_text(f"👍 Te lo ricordo il {when:%d/%m alle %H:%M}")
@@ -63,34 +73,85 @@ async def promemoria(update, context):
     await update.message.reply_text(txt or "Nessun promemoria.")
 
 
-# ---------- To-do e note ----------
+# ---------- To-do e note (su Notion se configurato, altrimenti in locale) ----------
 def _list_cmd(kind, emoji):
     @restricted
     async def handler(update, context):
-        items = storage.load(kind, [])
-        if context.args:
-            items.append(" ".join(context.args)); storage.save(kind, items)
-            return await update.message.reply_text(f"{emoji} Aggiunto.")
-        txt = "\n".join(f"{i + 1}. {t}" for i, t in enumerate(items))
-        await update.message.reply_text(txt or "Lista vuota.")
+        try:
+            if context.args:
+                text = " ".join(context.args)
+                if notion.enabled():
+                    await notion.add(kind, text)
+                else:
+                    storage.save(kind, storage.load(kind, []) + [text])
+                return await update.message.reply_text(
+                    f"{emoji} Aggiunto{' su Notion' if notion.enabled() else ''}.")
+            if notion.enabled():
+                rows = await notion.items(kind)
+                context.chat_data[kind] = [pid for pid, _ in rows]
+                texts = [t for _, t in rows]
+            else:
+                texts = storage.load(kind, [])
+            await update.message.reply_text(
+                "\n".join(f"{i + 1}. {t}" for i, t in enumerate(texts)) or "Lista vuota.")
+        except Exception as e:
+            await update.message.reply_text(f"❌ {e}")
     return handler
 
 
 def _del_cmd(kind):
     @restricted
     async def handler(update, context):
-        items = storage.load(kind, [])
         try:
-            done = items.pop(int(context.args[0]) - 1); storage.save(kind, items)
-            await update.message.reply_text(f"✅ Rimosso: {done}")
-        except Exception:
-            await update.message.reply_text("Indica il numero, es. /fatto 2")
+            n = int(context.args[0]) - 1
+            if notion.enabled():
+                ids = context.chat_data.get(kind) or [pid for pid, _ in await notion.items(kind)]
+                await (notion.done(ids[n]) if kind == "todo" else notion.remove(ids[n]))
+                ids.pop(n)
+                return await update.message.reply_text("✅ Aggiornato su Notion.")
+            items = storage.load(kind, [])
+            removed = items.pop(n); storage.save(kind, items)
+            await update.message.reply_text(f"✅ Rimosso: {removed}")
+        except (IndexError, ValueError):
+            await update.message.reply_text("Indica il numero (guardalo con /todo o /nota), es. /fatto 2")
+        except Exception as e:
+            await update.message.reply_text(f"❌ {e}")
     return handler
+
+
+@restricted
+async def diario(update, context):
+    """/diario oggi ho finito il montaggio – annotazione datata su Notion."""
+    if not notion.enabled():
+        return await update.message.reply_text("Collega Notion nel .env (NOTION_TOKEN, NOTION_PAGE_ID).")
+    await notion.add("log", " ".join(context.args) or "Nota")
+    await update.message.reply_text("📓 Salvato nel diario su Notion.")
+
+
+@restricted
+async def notion_cmd(update, context):
+    if not notion.enabled():
+        return await update.message.reply_text("Notion non collegato: aggiungi NOTION_TOKEN e NOTION_PAGE_ID nel .env.")
+    try:
+        await notion.db_id()
+        await update.message.reply_text("✅ Notion collegato: trovi tutto nel database «🧑‍💼 Max».")
+    except Exception as e:
+        await update.message.reply_text(f"❌ {e}")
 
 
 # ---------- Chat libera con Claude (opzionale) ----------
 SYSTEM = ("Sei Max, l'assistente personale dell'utente. Rispondi in italiano, in modo breve, "
-          "pratico e cordiale. Se l'utente chiede un promemoria, suggerisci il comando /ricorda.")
+          "pratico e cordiale. Se l'utente chiede un promemoria a orario, suggerisci il comando /ricorda. "
+          "Quando l'utente ti dice cose da fare, idee o fatti da ricordare, salvali su Notion con lo "
+          "strumento aggiungi_notion senza chiedere conferma.")
+
+NOTION_TOOL = {
+    "name": "aggiungi_notion",
+    "description": "Salva un elemento nel database Notion dell'utente.",
+    "input_schema": {"type": "object", "properties": {
+        "tipo": {"type": "string", "enum": ["todo", "notes", "log"],
+                 "description": "todo = cosa da fare, notes = idea/info, log = evento del diario"},
+        "testo": {"type": "string"}}, "required": ["tipo", "testo"]}}
 
 
 @restricted
@@ -103,9 +164,27 @@ async def chat(update, context):
     hist = context.chat_data.setdefault("hist", [])
     hist.append({"role": "user", "content": update.message.text})
     await update.message.chat.send_action("typing")
-    resp = await AsyncAnthropic(api_key=key).messages.create(
-        model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=1024,
-        system=SYSTEM + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.", messages=hist[-20:])
+    client = AsyncAnthropic(api_key=key)
+    kw = dict(model=os.getenv("CLAUDE_MODEL", "claude-sonnet-5-5"), max_tokens=1024,
+              system=SYSTEM + f" Oggi è {datetime.now():%A %d/%m/%Y %H:%M}.")
+    if notion.enabled():
+        kw["tools"] = [NOTION_TOOL]
+    msgs = hist[-20:]
+    while True:
+        resp = await client.messages.create(messages=msgs, **kw)
+        if resp.stop_reason != "tool_use":
+            break
+        msgs = msgs + [{"role": "assistant", "content": resp.content}]
+        results = []
+        for b in resp.content:
+            if b.type == "tool_use":
+                try:
+                    await notion.add(b.input["tipo"], b.input["testo"])
+                    out = "Salvato su Notion."
+                except Exception as e:
+                    out = f"Errore: {e}"
+                results.append({"type": "tool_result", "tool_use_id": b.id, "content": out})
+        msgs.append({"role": "user", "content": results})
     answer = "".join(b.text for b in resp.content if b.type == "text")
     hist.append({"role": "assistant", "content": answer})
     del hist[:-20]
@@ -121,6 +200,8 @@ HELP = f"""🧑‍💼 <b>Ciao, sono Max, il tuo assistente!</b>
 <b>To-do e note</b>
 /todo [testo] – aggiungi o mostra · /fatto N
 /nota [testo] – aggiungi o mostra · /cancella N
+/diario [testo] – annotazione datata su Notion
+/notion – verifica collegamento
 
 <b>PC</b>
 {system.HELP}
@@ -144,5 +225,6 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             CommandHandler("ricorda", ricorda), CommandHandler("promemoria", promemoria),
             CommandHandler("todo", _list_cmd("todo", "📝")), CommandHandler("fatto", _del_cmd("todo")),
             CommandHandler("nota", _list_cmd("notes", "🗒")), CommandHandler("cancella", _del_cmd("notes")),
+            CommandHandler("diario", diario), CommandHandler("notion", notion_cmd),
             *system.HANDLERS, *screen.HANDLERS, *files.HANDLERS,
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]
