@@ -113,7 +113,14 @@ def handlers(bot: str):
             name = re.sub(r"[^\w-]", "-", (m[1] if m else Path(doc.file_name).stem).strip()).lower()
             (base / name).mkdir(parents=True, exist_ok=True)
             (base / name / "SKILL.md").write_text(text, "utf-8")
-        await msg.reply_text(f"🧩 Skill «{name}» installata! Skill attuali: {', '.join(skills(bot))}")
+        txt = "\n".join(p.read_text("utf-8", errors="ignore") for p in (base / name).rglob("*")
+                        if p.is_file() and p.suffix in (".md", ".txt", ".py", ".sh", ".ps1", ".js", ".bat"))
+        risky = sorted({w for w in ("curl ", "wget ", "Invoke-WebRequest", "rm -rf", "del /", "powershell",
+                                    "api_key", "token", ".env", "ignore previous", "ignora le istruzioni")
+                        if w.lower() in txt.lower()})
+        warn = (f"\n⚠️ Contiene parole da controllare: {', '.join(risky)}. Se non ti fidi della fonte, "
+                f"rimuovila con /skill rimuovi {name}") if risky else ""
+        await msg.reply_text(f"🧩 Skill «{name}» installata! Skill attuali: {', '.join(skills(bot))}{warn}")
 
     is_skill = filters.Document.ALL & filters.CaptionRegex(r"(?i)^\s*skill")
     return [CommandHandler("impara", impara), CommandHandler("memoria", memoria),
