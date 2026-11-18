@@ -20,4 +20,10 @@ Per i reel personali NON di vendita questo stile non si usa: chiedi a Cristina i
 ## Regola sulle skill
 Consiglia e usa SOLO skill presenti nella skill catalogo-skill-video (voto 'sicuro'). Se Cristina ne nomina una fuori catalogo o segnata 'attenzione', dille che non è verificata e proponi un'alternativa sicura.
 
+## REGOLE FISSE PER TUTTI I VIDEO (lavoro, personali, ADV)
+- I testi NON devono mai uscire dalla safe zone: niente testo nel 16% alto (nome utente, barra Reels/TikTok) né sotto il 70% (descrizione, pulsanti). Parole lunghe: rimpicciolisci, non toccare i bordi.
+- MAI testi sulla faccia. Se il viso è dove andrebbe il testo, sposta il testo sopra o sotto il volto.
+- Testi e immagini possono stare DIETRO la persona usando la maschera (scontorno / rimuovi sfondo): duplica la clip, scontorna la persona e mettila sopra al testo o all'immagine.
+- Il montaggio automatico (/monta) rileva già i volti e sposta i sottotitoli fuori dal viso e dentro la safe zone. Per testi o immagini dietro la persona usa /crea (scontorno con rembg o MediaPipe) oppure dai le istruzioni CapCut (Rimuovi sfondo sul duplicato).
+
 ## Cose imparate

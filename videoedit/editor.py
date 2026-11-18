@@ -283,6 +283,65 @@ def tempo_ass(t: float) -> str:
     return f"{cs // 360000}:{cs // 6000 % 60:02d}:{cs // 100 % 60:02d}.{cs % 100:02d}"
 
 
+# ---------------------------------------------------------------- testo: safe zone e niente testo sulla faccia
+SAFE_ALTO, SAFE_BASSO = 0.16, 0.70   # centro del testo tra il 16% e il 70% dell'altezza (barre e pulsanti dei social)
+
+
+def volti_per_clip(video: Path, piano: dict, fmt: dict, info: dict) -> list:
+    """Per ogni clip: (y_alto, y_basso) del volto nelle coordinate del video finale, o None.
+    Usa OpenCV se installato (pip install opencv-python); altrimenti nessun controllo volti."""
+    try:
+        import cv2
+        import numpy as np
+    except ImportError:
+        print("[testo] opencv non installato: niente controllo volti (pip install opencv-python)")
+        return [None] * len(piano["clip"])
+    if not hasattr(cv2, "CascadeClassifier"):
+        print("[testo] questa versione di opencv non ha il rilevatore volti: pip install \"opencv-python-headless<5\"")
+        return [None] * len(piano["clip"])
+    rilevatore = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
+    W, H = fmt["larghezza"], fmt["altezza"]
+    sw, sh = info["larghezza"], info["altezza"]
+    zoom = fmt.get("zoom", {})
+    risultati = []
+    for c in piano["clip"]:
+        z = zoom.get("fattore", 1.0) if zoom.get("attivo") and (c["seg"] % zoom.get("ogni", 2) == 1) else 1.0
+        s = max(W * z / sw, H * z / sh)
+        oy = (sh * s - H) / 2
+        ys = []
+        for t in (c["s"] + 0.1, (c["s"] + c["e"]) / 2, max(c["s"], c["e"] - 0.1)):
+            r = subprocess.run(["ffmpeg", "-loglevel", "error", "-ss", f"{t:.2f}", "-i", str(video),
+                                "-frames:v", "1", "-vf", "scale=-2:480", "-f", "image2pipe", "-vcodec", "png", "-"],
+                               capture_output=True)
+            if not r.stdout:
+                continue
+            img = cv2.imdecode(np.frombuffer(r.stdout, np.uint8), cv2.IMREAD_GRAYSCALE)
+            k = sh / img.shape[0]
+            for (x, y, w, h) in rilevatore.detectMultiScale(img, 1.1, 5, minSize=(30, 30)):
+                # il volto + mento/fronte, riportato nel video finale (scala + ritaglio centrale)
+                ys += [(y - 0.25 * h) * k * s - oy, (y + 1.25 * h) * k * s - oy]
+        risultati.append((max(0, min(ys)), min(H, max(ys))) if ys else None)
+    print(f"[testo] volti trovati in {sum(r is not None for r in risultati)}/{len(risultati)} clip")
+    return risultati
+
+
+def y_sicura(y_pref: float, volto, H: int, alto_testo: int) -> int:
+    """Posizione verticale del testo: dentro la safe zone e mai sopra il volto."""
+    lo, hi = H * SAFE_ALTO + alto_testo / 2, H * SAFE_BASSO - alto_testo / 2
+    y = min(max(y_pref, lo), hi)
+    if volto:
+        f0, f1 = volto[0] - 40, volto[1] + 40
+        if y + alto_testo / 2 > f0 and y - alto_testo / 2 < f1:  # si sovrappone al volto
+            sopra, sotto = f0 - alto_testo / 2, f1 + alto_testo / 2
+            if sopra >= lo:
+                y = sopra
+            elif sotto <= hi:
+                y = sotto
+            else:  # il volto riempie lo schermo: il punto della safe zone più lontano dal viso
+                y = lo if (volto[0] + volto[1]) / 2 > H / 2 else hi
+    return int(y)
+
+
 def crea_sottotitoli(piano: dict, analisi: dict, fmt: dict, dest: Path) -> Path | None:
     st = fmt.get("sottotitoli", {})
     if not st.get("attivi"):
@@ -309,7 +368,13 @@ Format: Layer, Start, End, Style, Text
     per_id = {s["id"]: s for s in analisi["segmenti"]}
     righe, t0 = [], 0.0  # t0 = posizione della clip nel video finale
     n = st.get("parole_per_riga", 5)
-    for c in piano["clip"]:
+    W, H = fmt["larghezza"], fmt["altezza"]
+    volti = piano.get("_volti") or [None] * len(piano["clip"])
+    y_base = (H * st["altezza_percento"] / 100 if st.get("altezza_percento") else
+              {"basso": H - st.get("margine_verticale", 80) - st["dimensione"],
+               "centro": H / 2, "alto": st.get("margine_verticale", 80) + st["dimensione"]}[st.get("posizione", "basso")])
+    for ci, c in enumerate(piano["clip"]):
+        pos_clip = f"{{\\an5\\pos({W // 2},{y_sicura(y_base, volti[ci], H, int(st['dimensione'] * 1.6))})}}"
         parole = [p for p in per_id[c["seg"]]["parole"]
                   if p["s"] >= c["s"] - 0.01 and p["e"] <= c["e"] + 0.01]
         for k in range(0, len(parole), n):
@@ -323,7 +388,7 @@ Format: Layer, Start, End, Style, Text
                 testo = testo.lower()
             a = t0 + g[0]["s"] - c["s"]
             b = t0 + (parole[k + n]["s"] if k + n < len(parole) else g[-1]["e"]) - c["s"]
-            righe.append(f"Dialogue: 0,{tempo_ass(a)},{tempo_ass(b)},S,{pos}{testo}")
+            righe.append(f"Dialogue: 0,{tempo_ass(a)},{tempo_ass(b)},S,{pos_clip}{testo}")
         t0 += c["e"] - c["s"]
     dest.write_text(testa + "\n".join(righe) + "\n", encoding="utf-8")
     return dest
@@ -356,7 +421,10 @@ def sottotitoli_chiave(piano: dict, analisi: dict, fmt: dict, st: dict, dest: Pa
     per_id = {s["id"]: s for s in analisi["segmenti"]}
     n = st.get("parole_per_riga", 5)
     righe, t0 = [], 0.0
-    for c in piano["clip"]:
+    volti = piano.get("_volti") or [None] * len(piano["clip"])
+    y_base = y
+    for ci, c in enumerate(piano["clip"]):
+        y = y_sicura(y_base, volti[ci], H, 240) + 40  # 240 = riga piccola + parola chiave
         parole = [p for p in per_id[c["seg"]]["parole"]
                   if p["s"] >= c["s"] - 0.01 and p["e"] <= c["e"] + 0.01]
         gruppi, cur = [], []
@@ -398,6 +466,8 @@ def renderizza(video: Path, analisi: dict, piano: dict, profilo: dict, anteprima
     fmt = dict(profilo["formati"][piano["formato"]])
     W, H = fmt["larghezza"], fmt["altezza"]
     cart = cartella_di(video)
+    if fmt.get("sottotitoli", {}).get("attivi"):
+        piano["_volti"] = volti_per_clip(video, piano, fmt, analisi["info"])
     ass = crea_sottotitoli(piano, analisi, fmt, cart / "sottotitoli.ass")
 
     zoom = fmt.get("zoom", {})
