@@ -67,7 +67,7 @@ async def via_claude_code(exe, system, messages, image, bot=None):
         prompt = f"Guarda l'immagine {foto} (usa lo strumento Read). " + prompt
     tools, turns = "Read,Skill,Glob", "8"
     if bot and bot.lower() == "max":  # Max usa il Notion collegato all'account Claude di Cristina
-        tools, turns = tools + "," + os.getenv("NOTION_MCP", "mcp__claude_ai_Notion"), "20"
+        tools, turns = tools + "," + os.getenv("NOTION_MCP", "mcp__notion,mcp__claude_ai_Notion"), "20"
     args = [exe, "-p", "--output-format", "text", "--append-system-prompt", system,
             "--allowedTools", tools, "--add-dir", tmp, "--max-turns", turns]
     proc = await asyncio.create_subprocess_exec(*args, cwd=cwd, stdin=asyncio.subprocess.PIPE,

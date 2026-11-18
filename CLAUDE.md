@@ -27,6 +27,6 @@ Codice su GitHub: repo `criscandidature-png/Main`, branch `claude/peaceful-tesla
 
 ## Stato al 18/11/2026 e cose in sospeso
 - Le bot si sono fermate mentre Cristina era fuori casa: verificare che `avvia.bat` sia aperto, che le librerie siano installate e copiare gli ultimi file (pcbot, cervelli, videoedit, avvia.bat, avvio_automatico.bat, requirements.txt) se non già aggiornati; poi lanciare una volta `avvio_automatico.bat`.
-- Verificare che Max veda Notion (connettore `mcp__claude_ai_Notion`, variabile NOTION_MCP per cambiarne il nome).
+- Notion per Max: `cervelli/max/.mcp.json` (server ufficiale https://mcp.notion.com/mcp). Login una volta con `collega_notion.bat` (/mcp → notion → Authenticate). In alternativa il connettore claude.ai (`mcp__claude_ai_Notion`).
 - Da decidere con Cristina: i due PDF di Stefania (Brand Positioning Statement, Metodo Merenda) – progetto privato o invio da Telegram; riferimenti per i reel personali NON di vendita; eventuale versione su server per avere le bot attive anche a PC spento.
 - Regole di Cristina: niente testi fuori dalla safe zone o sulla faccia; testi/immagini anche dietro la persona con maschera; arancione solo nelle ADV; 4:5 solo nelle ADV; prima di cancellare/spostare su Notion chiedere conferma.
