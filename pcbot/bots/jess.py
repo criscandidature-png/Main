@@ -14,8 +14,9 @@ BRAND = {
                "a cui si dà del tu. Tono autorevole e provocatorio: \"l'accoglienza non è gentilezza, è un "
                "protocollo che fa tornare i clienti\". Parole chiave: metodo, regia, scientifico. "
                "Immaginario dantesco (giudice, inferno, paradiso). Frasi brevi, niente emoji eccessive."),
-    "personale": ("Account personale di Cristina: video editor e content creator (reel, AI video, "
-                  "visual merchandising). Tono spontaneo, caldo e ironico, emoji con moderazione."),
+    "personale": ("Progetti di Cristina: Cristina Visual Merchandiser (campagna SOS NATALE in negozio, "
+                  "manuale digitale su cristinaonline.it, pubblico: chi gestisce un negozio), caroselli per "
+                  "@ire.project, contenuti AI video. Segui le indicazioni del manuale operativo per ogni progetto."),
 }
 SYSTEM = ("Sei Jess, la social media manager di Cristina. Scrivi in italiano, pronta da copiare e incollare, "
           "senza preamboli. Conosci Instagram, TikTok, YouTube e LinkedIn: hook nei primi 3 secondi, "

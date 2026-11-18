@@ -35,9 +35,12 @@ def skills(bot) -> list[str]:
 
 
 def context_text(bot) -> str:
-    """Per le AI che non leggono CLAUDE.md da sole (API, Gemini)."""
+    """Per le AI che non leggono CLAUDE.md da sole (API, Gemini): manuali importati + cose imparate."""
+    d = folder(bot)
+    docs = "".join("\n\n" + (d / m).read_text("utf-8")
+                   for m in re.findall(r"^@(\S+\.md)$", memory_file(bot).read_text("utf-8"), re.M) if (d / m).exists())
     l = lessons(bot)
-    return ("\n\nCose che Cristina ti ha insegnato, da seguire sempre:\n" + "\n".join(f"- {x}" for x in l)) if l else ""
+    return docs + (("\n\nCose che Cristina ti ha insegnato, da seguire sempre:\n" + "\n".join(f"- {x}" for x in l)) if l else "")
 
 
 def handlers(bot: str):

@@ -24,8 +24,8 @@ def apply(data: bytes) -> list[str]:
             dest = ROOT / rel
             if rel.startswith(REPLACE):
                 pass
-            elif rel.startswith("cervelli/") and not dest.exists():
-                pass  # nuove skill/cervelli: aggiunte; le memorie esistenti non si toccano
+            elif rel.startswith("cervelli/") and (not dest.exists() or not rel.endswith("CLAUDE.md")):
+                pass  # manuali e skill aggiornati; le memorie (CLAUDE.md) esistenti non si toccano
             else:
                 continue
             content = z.read(n)
