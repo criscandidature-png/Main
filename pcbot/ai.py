@@ -79,7 +79,14 @@ async def via_claude_code(exe, system, messages, image, bot=None):
 async def generate(system: str, messages: list[dict], image: bytes | None = None, max_tokens=1500,
                    bot: str | None = None) -> str:
     """messages: [{"role": "user"|"assistant", "content": "testo"}]. bot = nome del cervello da usare."""
-    return clean(await _generate(system + STYLE, messages, image, max_tokens, bot))
+    if bot:
+        from pcbot import team
+        system += team.context_for(bot)
+    out = clean(await _generate(system + STYLE, messages, image, max_tokens, bot))
+    if bot:
+        from pcbot import team
+        out = await team.handle_tags(out, bot)
+    return out
 
 
 async def _generate(system, messages, image, max_tokens, bot):

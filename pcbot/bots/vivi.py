@@ -5,7 +5,7 @@ from pathlib import Path
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import menu as _menu
+from pcbot import menu as _menu, team
 from pcbot import ai, brain
 
 NAME = "Vivi"
@@ -303,7 +303,7 @@ Stili lavoro: giudice, testimonial, evento, fiera, youtube
 
 🎨 /crea brief – creo un video da zero con il codice (motion graphics, titoli animati, spiegoni)
 
-💬 Scrivimi liberamente: storyboard, prompt per Higgsfield/Kling/Seedance/Veo, musica Suno, effetti sonori…""" + brain.HELP
+💬 Scrivimi liberamente: storyboard, prompt per Higgsfield/Kling/Seedance/Veo, musica Suno, effetti sonori…""" + brain.HELP + "\n\n<b>🤝 Team</b>\n/team – passaggi di lavoro tra noi\n/passa vivi testo – passa un lavoro"
 
 
 @restricted
@@ -392,7 +392,7 @@ async def aiuto(update, context):
 HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("pc", from_pc),
             CommandHandler(["lavoro", "personale"], area_cmd), CommandHandler("monta", monta_cmd),
             CommandHandler("crea", crea),
-            CallbackQueryHandler(buttons, pattern=r"^vv:"), *brain.handlers(NAME),
+            CallbackQueryHandler(buttons, pattern=r"^vv:"), *brain.handlers(NAME), *team.handlers(NAME),
             MessageHandler(filters.VIDEO | filters.VIDEO_NOTE | filters.Document.VIDEO, receive),
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)] + [
     CommandHandler(f.__name__, f) for f in

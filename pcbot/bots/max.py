@@ -3,7 +3,7 @@ import html, os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import menu as _menu
+from pcbot import menu as _menu, team
 from pcbot import ai, brain, english, storage, notion, updater
 from pcbot.modules import system, screen, files
 
@@ -257,7 +257,7 @@ HELP = f"""🧑‍💼 <b>Ciao, sono Max, la tua assistente!</b>
 {html.escape(screen.HELP)}
 {html.escape(files.HELP)}
 
-Scrivimi anche in modo libero 💬""" + english.HELP + brain.HELP + updater.HELP
+Scrivimi anche in modo libero 💬""" + english.HELP + brain.HELP + "\n\n<b>🤝 Team</b>\n/team – passaggi di lavoro tra noi\n/passa vivi testo – passa un lavoro" + updater.HELP
 
 
 @restricted
@@ -278,7 +278,7 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             CommandHandler("todo", _list_cmd("todo", "📝")), CommandHandler("fatto", _del_cmd("todo")),
             CommandHandler("nota", _list_cmd("notes", "🗒")), CommandHandler("cancella", _del_cmd("notes")),
             CommandHandler("diario", diario), CommandHandler("notion", notion_cmd),
-            *brain.handlers(NAME), *updater.HANDLERS, *english.HANDLERS,
+            *brain.handlers(NAME), *team.handlers(NAME), *updater.HANDLERS, *english.HANDLERS,
             *system.HANDLERS, *screen.HANDLERS, *files.HANDLERS,
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]
 

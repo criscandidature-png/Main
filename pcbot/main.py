@@ -7,6 +7,7 @@ load_dotenv()
 from telegram import BotCommand
 from telegram.ext import Application, CommandHandler
 from pcbot.auth import ALLOWED
+from pcbot import team
 from pcbot.bots import vivi, jess, max as max_bot
 
 TEAM = [("MAX_TOKEN", max_bot), ("VIVI_TOKEN", vivi), ("JESS_TOKEN", jess)]
@@ -30,6 +31,7 @@ async def build(token, bot):
     app = Application.builder().token(token).concurrent_updates(True).build()
     app.add_handlers(bot.HANDLERS)
     app.add_error_handler(on_error)
+    team.register(bot.NAME, app)
     for h, group in getattr(bot, "MENU_HANDLERS", []):
         app.add_handler(h, group)
     await app.initialize()

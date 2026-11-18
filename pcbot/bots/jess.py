@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
-from pcbot import menu as _menu
+from pcbot import menu as _menu, team
 from pcbot import ai, brain, notion, storage
 
 NAME = "Jess"
@@ -180,7 +180,7 @@ Lavoro su due profili: /lavoro (Stefania, Madrina dell'Accoglienza) o /personale
 /programma 25/11 18:00 testo – ti avviso quando pubblicare
 /risposta testo – risposte a commenti e DM
 
-Oppure scrivimi liberamente 💬""" + brain.HELP
+Oppure scrivimi liberamente 💬""" + brain.HELP + "\n\n<b>🤝 Team</b>\n/team – passaggi di lavoro tra noi\n/passa vivi testo – passa un lavoro"
 
 
 @restricted
@@ -202,7 +202,7 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             CommandHandler("hook", hook), CommandHandler("idee", idee), CommandHandler("script", script),
             CommandHandler("risposta", risposta), CommandHandler("piano", piano),
             CommandHandler("programma", programma),
-            *brain.handlers(NAME),
+            *brain.handlers(NAME), *team.handlers(NAME),
             MessageHandler(filters.PHOTO, photo),
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]
 
