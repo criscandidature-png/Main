@@ -1,0 +1,15 @@
+# FORMAT 3 — Evento / dietro le quinte (vlog col telefono). Il più coinvolgente.
+base: lavoro
+taglio: { pausa_max: 0.12, margine: 0.05 }
+ai:
+  istruzioni: |
+    Vlog di un evento girato col telefono: racconto personale ed emotivo, con nomi propri
+    delle persone e dei luoghi. Ritmo molto veloce in apertura.
+    Tieni i momenti di emozione e di relazione con le persone. Nessuna CTA commerciale:
+    chiusura con ringraziamento o con un principio ("le persone ricordano come le hai fatte sentire").
+    Nessuna scena AI (broll vuoto).
+formati:
+  "9:16":
+    durata_max: 160
+    zoom: { attivo: false }
+    sottotitoli: { parole_per_riga: 3, altezza_percento: 75 }

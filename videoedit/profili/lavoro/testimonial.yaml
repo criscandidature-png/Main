@@ -1,0 +1,15 @@
+# FORMAT 2 — Testimonial "Racconto la mia esperienza". Parla il cliente, primo piano.
+base: lavoro
+taglio: { pausa_max: 0.30 }
+ai:
+  istruzioni: |
+    Testimonial: un imprenditore racconta in prima persona la sua esperienza con Stefania.
+    Mantieni l'arco: problema -> incontro con Stefania -> metodo -> risultato concreto.
+    Tieni nomi propri, numeri e risultati. Taglia esitazioni e ripetizioni.
+    Il primo segmento deve presentare subito il problema o il risultato più forte.
+    Nessuna scena AI (broll vuoto).
+formati:
+  "9:16":
+    durata_max: 95
+    zoom: { attivo: true, fattore: 1.07, ogni: 3 }     # jump cut ogni 2-4 s
+    sottotitoli: { dimensione: 86, parole_per_riga: 4, altezza_percento: 67 }

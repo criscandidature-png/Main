@@ -8,6 +8,7 @@ if ! command -v brew >/dev/null; then
   eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv)"
 fi
 brew install ffmpeg python@3.12
+brew install --cask font-poppins || true
 python3.12 -m venv .venv
 .venv/bin/pip install -q --upgrade pip
 .venv/bin/pip install -q -r requirements.txt

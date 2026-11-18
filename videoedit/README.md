@@ -42,13 +42,26 @@ In `profili/lavoro.yaml` e `profili/personale.yaml`, ognuno con le sezioni `"16:
 
 Per un nuovo stile basta copiare un file YAML (es. `profili/cliente_x.yaml`) e usare `--profilo cliente_x`.
 
-## Stili dentro un profilo
-Un profilo può avere più stili in una sottocartella, che **ereditano** le impostazioni e cambiano solo ciò che serve:
-```bash
-python editor.py tutto video.mp4 --profilo lavoro/youtube   # YouTube lungo 16:9
-python editor.py tutto video.mp4 --profilo lavoro/reel      # Reel / Shorts 9:16
-```
-Per un nuovo stile crea `profili/lavoro/nome.yaml` con `base: lavoro` e solo le differenze.
+## Stili di lavoro (La Madrina dell'Accoglienza)
+Ricavati dal report stile del 17/11/2026. Ereditano tutto da `profili/lavoro.yaml`.
+
+| Comando | Format |
+|---|---|
+| `--profilo lavoro/giudice` | Giudice / protocollo: volto + scene AI, 40-60 s, hook forte |
+| `--profilo lavoro/testimonial` | "Racconto la mia esperienza": parla il cliente |
+| `--profilo lavoro/evento` | Vlog evento / dietro le quinte, ritmo velocissimo |
+| `--profilo lavoro/fiera` | Fiere e festival, invito a conoscerla |
+| `--profilo lavoro/youtube` | YouTube lungo 16:9 |
+
+Sottotitoli: bianchi, Poppins bold, minuscoli, senza punteggiatura, 1-4 parole, al 65% dell'altezza, solo ombra.
+
+### Scene AI (b-roll)
+Nel format Giudice, Claude propone 4-6 scene con il prompt pronto, salvate in
+`lavori/<video>/scene_da_generare.txt`. Le generi (es. Higgsfield), le salvi come
+`lavori/<video>/broll/1.jpg`, `2.mp4`, ... e rilanci `renderizza`: vengono messe a tutto
+schermo sopra la voce, con i sottotitoli che continuano. Le scene mancanti vengono saltate.
+
+Un nuovo stile = un file `profili/lavoro/nome.yaml` con `base: lavoro` e solo le differenze.
 
 ## Come taglia
 - Taglia solo **tra le parole** (tempi di Whisper + margine): mai a metà parola.

@@ -1,16 +1,17 @@
-# LAVORO -> YouTube (video lunghi orizzontali). Eredita tutto da lavoro.yaml
+# YOUTUBE — video lunghi orizzontali. Stesso tono e stessi colori, più respiro.
 base: lavoro
-nome: lavoro/youtube
-taglio:
-  pausa_max: 0.45          # più respiro: su YouTube si ascolta, non si scorre
+taglio: { pausa_max: 0.40, margine: 0.10 }
+audio: { loudness: -14 }
 ai:
   istruzioni: |
-    Video YouTube lungo di Stefania Salvatore, "La Madrina dell'Accoglienza",
-    esperta di accoglienza per imprenditori e strutture turistiche. Tono autorevole e caldo.
-    Mantieni tutto il contenuto di valore e gli esempi pratici.
+    Video YouTube lungo. Mantieni tutto il contenuto di valore, gli esempi pratici e le storie.
     Taglia solo false partenze, ripetizioni, divagazioni e momenti morti.
-    Il primo segmento tenuto deve far capire subito di cosa parla il video e perché guardarlo.
+    Il primo segmento deve dire subito di cosa parla il video e perché guardarlo fino in fondo.
+    Proponi scene AI (broll) solo per i concetti più forti, al massimo una ogni minuto circa,
+    nello stile del brand: pittura a olio calda o iper-realismo dorato, palette rosso/bordeaux/oro.
 formati:
   "16:9":
-    zoom: { attivo: true, fattore: 1.06, ogni: 4 }   # leggero, per non annoiare
-    sottotitoli: { attivi: false }   # su YouTube meglio i sottotitoli caricati a parte
+    durata_max: null
+    broll_durata_max: 4.0
+    zoom: { attivo: true, fattore: 1.05, ogni: 4 }
+    sottotitoli: { attivi: false }   # su YouTube si caricano a parte (file .srt)

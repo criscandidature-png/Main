@@ -51,7 +51,7 @@ def carica_profilo(nome: str) -> dict:
     dati = yaml.safe_load(f.read_text(encoding="utf-8"))
     if dati.get("base"):
         dati = unisci(carica_profilo(dati.pop("base")), dati)
-    dati.setdefault("nome", nome)
+    dati["nome"] = nome
     return dati
 
 
@@ -149,6 +149,12 @@ def chiedi_a_claude(segmenti: list[dict], profilo: dict, formato: str, durata_ma
                 "hook": {"type": ["integer", "null"],
                          "description": "id della frase da mettere in apertura, o null"},
                 "note": {"type": "string", "description": "max 1 riga"},
+                "broll": {"type": "array", "description": "scene AI da sovrapporre alla voce (vuoto se lo stile non le usa)",
+                          "items": {"type": "object", "properties": {
+                              "seg": {"type": "integer", "description": "id della frase"},
+                              "parola": {"type": "string", "description": "parola chiave illustrata"},
+                              "prompt": {"type": "string", "description": "prompt immagine verticale, in italiano"}},
+                              "required": ["seg", "parola", "prompt"]}},
             },
             "required": ["tieni", "hook"],
         },
@@ -192,6 +198,7 @@ def pianifica(analisi: dict, profilo: dict, formato: str, senza_ai: bool) -> dic
     candidati = [s for s in segmenti if s["id"] not in scarta]
 
     ordine = [s["id"] for s in candidati]
+    broll: list[dict] = []
     note = "solo regole (senza AI)"
     if not senza_ai and candidati:
         risposta = chiedi_a_claude(candidati, profilo, formato, fmt.get("durata_max"))
@@ -205,6 +212,7 @@ def pianifica(analisi: dict, profilo: dict, formato: str, senza_ai: bool) -> dic
             if hook in validi:
                 ordine = [hook] + [i for i in tieni if i != hook]
             note = risposta.get("note", "")
+            broll = [b for b in risposta.get("broll", []) if b.get("seg") in tieni]
 
     per_id = {s["id"]: s for s in segmenti}
     clip = []
@@ -223,7 +231,8 @@ def pianifica(analisi: dict, profilo: dict, formato: str, senza_ai: bool) -> dic
         clip = tenute
 
     piano = {"profilo": profilo["nome"], "formato": formato, "note": note,
-             "scartate_ripetizioni": sorted(scarta), "clip": clip}
+             "scartate_ripetizioni": sorted(scarta), "clip": clip,
+             "broll": [dict(b, file=f"broll/{i + 1}") for i, b in enumerate(broll)]}
     valida_piano(piano, durata_tot)
     durata = sum(c["e"] - c["s"] for c in clip)
     print(f"[piano] {len(clip)} clip, {durata:.1f}s su {durata_tot:.1f}s originali. {note}")
@@ -256,6 +265,10 @@ def crea_sottotitoli(piano: dict, analisi: dict, fmt: dict, dest: Path) -> Path 
     if not st.get("attivi"):
         return None
     allin = {"basso": 2, "centro": 5, "alto": 8}[st.get("posizione", "basso")]
+    pos = ""
+    if st.get("altezza_percento"):  # es. 65 = centro della scritta al 65% dell'altezza
+        allin = 5
+        pos = f"{{\\an5\\pos({fmt['larghezza'] // 2},{int(fmt['altezza'] * st['altezza_percento'] / 100)})}}"
     testa = f"""[Script Info]
 ScriptType: v4.00+
 PlayResX: {fmt['larghezza']}
@@ -263,7 +276,7 @@ PlayResY: {fmt['altezza']}
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, Outline, Shadow, Alignment, MarginL, MarginR, MarginV
-Style: S,{st['font']},{st['dimensione']},{colore_ass(st['colore'])},{colore_ass(st['bordo'])},&H00000000,1,{st['spessore_bordo']},0,{allin},60,60,{st['margine_verticale'] if allin != 5 else 0}
+Style: S,{st['font']},{st['dimensione']},{colore_ass(st['colore'])},{colore_ass(st['bordo'])},&H80000000,1,{st.get('spessore_bordo', 0)},{st.get('ombra', 0)},{allin},60,60,{st['margine_verticale'] if allin != 5 else 0}
 
 [Events]
 Format: Layer, Start, End, Style, Text
@@ -277,11 +290,15 @@ Format: Layer, Start, End, Style, Text
         for k in range(0, len(parole), n):
             g = parole[k:k + n]
             testo = " ".join(p["w"] for p in g)
+            if st.get("togli_punteggiatura"):
+                testo = re.sub(r"[.,;:!?…]+", "", testo)
             if st.get("maiuscolo"):
                 testo = testo.upper()
+            elif st.get("minuscolo"):
+                testo = testo.lower()
             a = t0 + g[0]["s"] - c["s"]
             b = t0 + (parole[k + n]["s"] if k + n < len(parole) else g[-1]["e"]) - c["s"]
-            righe.append(f"Dialogue: 0,{tempo_ass(a)},{tempo_ass(b)},S,{testo}")
+            righe.append(f"Dialogue: 0,{tempo_ass(a)},{tempo_ass(b)},S,{pos}{testo}")
         t0 += c["e"] - c["s"]
     dest.write_text(testa + "\n".join(righe) + "\n", encoding="utf-8")
     return dest
@@ -313,6 +330,29 @@ def renderizza(video: Path, analisi: dict, piano: dict, profilo: dict, anteprima
     if anteprima:
         catena_v += ",scale=-2:480"
     filtri.append(f"{''.join(uscite)}concat=n={len(uscite)}:v=1:a=1[cv][ca]")
+    # scene AI: a tutto schermo sopra la voce, per la durata della frase (max broll_durata_max s)
+    ingressi, base, n_in = [], "cv", 1
+    tempi, t = {}, 0.0
+    for c in piano["clip"]:
+        tempi.setdefault(c["seg"], [t, 0.0])
+        tempi[c["seg"]][1] = t + c["e"] - c["s"]
+        t += c["e"] - c["s"]
+    for k, b in enumerate(piano.get("broll", [])):
+        trovati = [f for f in (cart / "broll").glob(Path(b["file"]).name + ".*")] if (cart / "broll").exists() else []
+        if not trovati or b["seg"] not in tempi:
+            continue
+        f = trovati[0]
+        a, z = tempi[b["seg"]]
+        z = min(z, a + fmt.get("broll_durata_max", 3.0))
+        immagine = f.suffix.lower() in (".jpg", ".jpeg", ".png", ".webp")
+        ingressi += (["-loop", "1", "-t", f"{z - a:.2f}"] if immagine else []) + ["-i", str(f)]
+        filtri.append(f"[{n_in}:v]scale={W}:{H}:force_original_aspect_ratio=increase,crop={W}:{H},"
+                      f"setsar=1,fps=30,trim=0:{z - a:.2f},setpts=PTS-STARTPTS+{a:.3f}/TB[b{k}]")
+        filtri.append(f"[{base}][b{k}]overlay=enable='between(t,{a:.3f},{z:.3f})':eof_action=pass[o{k}]")
+        base, n_in = f"o{k}", n_in + 1
+    if base != "cv":
+        catena_v = catena_v.replace("[cv]", f"[{base}]", 1)
+        print(f"[render] {n_in - 1} scene AI inserite")
     filtri.append(f"{catena_v}[vout]")
     filtri.append(f"[ca]loudnorm=I={profilo['audio']['loudness']}:TP=-1.5:LRA=11[aout]")
 
@@ -321,7 +361,7 @@ def renderizza(video: Path, analisi: dict, piano: dict, profilo: dict, anteprima
     script = cart / "filtri.txt"
     script.write_text(";\n".join(filtri))
     print(f"[render] {'anteprima 480p' if anteprima else 'finale'} -> {out}")
-    esegui(["ffmpeg", "-y", "-loglevel", "error", "-i", str(video),
+    esegui(["ffmpeg", "-y", "-loglevel", "error", "-i", str(video), *ingressi,
             "-filter_complex_script", str(script), "-map", "[vout]", "-map", "[aout]",
             "-c:v", "libx264", "-preset", "ultrafast" if anteprima else "medium",
             "-crf", "28" if anteprima else "18", "-pix_fmt", "yuv420p",
@@ -356,6 +396,12 @@ def main() -> None:
         piano = pianifica(analisi, profilo, formato, a.senza_ai)
         f_piano.write_text(json.dumps(piano, ensure_ascii=False, indent=1))
         print(f"[piano] salvato in {f_piano} (puoi modificarlo a mano prima del render)")
+        if piano.get("broll"):
+            elenco = cart / "scene_da_generare.txt"
+            elenco.write_text("\n\n".join(f"{b['file']}  (parola: {b['parola']})\n{b['prompt']}"
+                                            for b in piano["broll"]), encoding="utf-8")
+            print(f"[piano] {len(piano['broll'])} scene AI proposte -> {elenco}\n"
+                  f"        salva le immagini/clip come {cart}/broll/1.jpg, 2.mp4, ... e poi renderizza")
     if a.comando in ("renderizza", "tutto"):
         if not f_piano.exists():
             sys.exit("Nessun piano: esegui prima 'pianifica'.")
