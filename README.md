@@ -4,7 +4,7 @@
 |---|---|
 | 🧑‍💼 **Max** | Assistente personale: promemoria, to-do, note, controllo del PC, chat libera (AI) |
 | 🎬 **Vivi** | Video editor: taglia, verticale 9:16, comprimi, velocità, testo, GIF, audio |
-| 📱 **Jess** | Social media manager – *in arrivo* |
+| 📱 **Jess** | Social media manager: caption, hashtag, hook, script, piano editoriale, promemoria di pubblicazione |
 
 Tutti girano sul PC con un solo comando e rispondono solo al tuo ID Telegram.
 

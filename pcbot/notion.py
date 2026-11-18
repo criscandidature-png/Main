@@ -8,7 +8,7 @@ import httpx
 from pcbot import storage
 
 API = "https://api.notion.com/v1"
-TYPES = {"todo": "To-do", "notes": "Nota", "reminders": "Promemoria", "log": "Diario"}
+TYPES = {"todo": "To-do", "notes": "Nota", "reminders": "Promemoria", "log": "Diario", "post": "Post social"}
 
 
 def enabled():

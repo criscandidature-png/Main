@@ -7,10 +7,9 @@ load_dotenv()
 from telegram import BotCommand
 from telegram.ext import Application, CommandHandler
 from pcbot.auth import ALLOWED
-from pcbot.bots import vivi, max as max_bot
+from pcbot.bots import vivi, jess, max as max_bot
 
-# Per aggiungere Jess: crea pcbot/bots/jess.py e aggiungi ("JESS_TOKEN", jess) qui.
-TEAM = [("MAX_TOKEN", max_bot), ("VIVI_TOKEN", vivi)]
+TEAM = [("MAX_TOKEN", max_bot), ("VIVI_TOKEN", vivi), ("JESS_TOKEN", jess)]
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("team")
