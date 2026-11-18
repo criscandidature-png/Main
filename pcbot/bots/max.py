@@ -3,6 +3,7 @@ import os, re
 from datetime import datetime, timedelta
 from telegram.ext import CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
+from pcbot import menu as _menu
 from pcbot import ai, brain, english, storage, notion, updater
 from pcbot.modules import system, screen, files
 
@@ -182,6 +183,8 @@ NOTION_TOOL = {
 
 @restricted
 async def chat(update, context):
+    if not _menu.addressed(update, context):
+        return
     if not ai.available():
         return await update.message.reply_text("Per parlare liberamente con me aggiungi GEMINI_API_KEY "
                                                "(gratis) nel .env. Intanto usa /aiuto.")
@@ -256,6 +259,8 @@ Scrivimi anche in modo libero 💬""" + english.HELP + brain.HELP + updater.HELP
 @restricted
 async def aiuto(update, context):
     await update.message.reply_text(HELP, parse_mode="HTML")
+    if update.message.text.startswith("/start"):
+        await show_menu(update, context)
 
 
 async def on_start(app):
@@ -272,3 +277,10 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             *brain.handlers(NAME), *updater.HANDLERS, *english.HANDLERS,
             *system.HANDLERS, *screen.HANDLERS, *files.HANDLERS,
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]
+
+
+MENU = [[("📋 To-do", "todo", None), ("➕ Nuovo to-do", "todo", "Cosa aggiungo alla lista?")],
+        [("⏰ Promemoria", "promemoria", None), ("🔔 Ricordami…", "ricorda", "Quando e cosa? (es. 18:30 palestra, 10m chiama mamma)")],
+        [("🇬🇧 Lezione", "inglese", None), ("🧠 Quiz", "quiz", None), ("✍️ Correggi", "correggi", "Scrivi la frase in inglese")],
+        [("🖥 Stato PC", "status", None), ("📸 Screenshot", "screen", None), ("📓 Diario", "diario", "Cosa annoto?")]]
+MENU_HANDLERS, show_menu = _menu.build(MENU, HANDLERS)

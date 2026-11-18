@@ -5,6 +5,7 @@ from pathlib import Path
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
+from pcbot import menu as _menu
 from pcbot import ai, brain
 
 NAME = "Vivi"
@@ -123,7 +124,7 @@ async def ask_style(message, context):
 @restricted
 async def area_cmd(update, context):
     """/lavoro o /personale – cambia area."""
-    context.chat_data["area"] = update.message.text.split()[0].lstrip("/").split("@")[0]
+    context.chat_data["area"] = (context.chat_data.pop("_cmd", None) or update.message.text.split()[0].lstrip("/").split("@")[0])
     await update.message.reply_text(f"Area: {LABEL[area(context)]}\nI file vanno in {archivio(context)}")
     if context.chat_data.get("video"):
         await ask_style(update.message, context)
@@ -358,6 +359,8 @@ async def crea(update, context):
 @restricted
 async def chat(update, context):
     """Domande libere: storyboard, prompt video/Suno/SFX, consigli di montaggio, usando le sue skill."""
+    if not _menu.addressed(update, context):
+        return
     if not ai.available():
         return await update.message.reply_text("Per parlare con me serve Claude Code collegato (collega_claude.bat).")
     hist = context.chat_data.setdefault("hist", [])
@@ -382,6 +385,8 @@ async def chat(update, context):
 @restricted
 async def aiuto(update, context):
     await update.message.reply_text(HELP, parse_mode="HTML")
+    if update.message.text.startswith("/start"):
+        await show_menu(update, context)
 
 
 HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("pc", from_pc),
@@ -392,3 +397,10 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("p
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)] + [
     CommandHandler(f.__name__, f) for f in
     (taglia, verticale, quadrato, comprimi, velocita, muto, audio, gif, copertina, testo)]
+
+
+MENU = [[("🎬 Monta video", "monta", None), ("🎨 Crea video", "crea", "Descrivi il video da creare")],
+        [("💼 Lavoro", "lavoro", None), ("🏠 Personale", "personale", None)],
+        [("✂️ Taglia", "taglia", "Da quando a quando? (es. 0:05 0:20)"), ("📱 Verticale", "verticale", None), ("🗜 Comprimi", "comprimi", None)],
+        [("🖼 Copertina", "copertina", "A che secondo? (es. 0:03)"), ("🎵 Audio mp3", "audio", None), ("🧠 Memoria", "memoria", None)]]
+MENU_HANDLERS, show_menu = _menu.build(MENU, HANDLERS)

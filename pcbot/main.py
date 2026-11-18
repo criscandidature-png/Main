@@ -18,9 +18,12 @@ log = logging.getLogger("team")
 async def build(token, bot):
     app = Application.builder().token(token).concurrent_updates(True).build()
     app.add_handlers(bot.HANDLERS)
+    for h, group in getattr(bot, "MENU_HANDLERS", []):
+        app.add_handler(h, group)
     await app.initialize()
     cmds = sorted({c for h in bot.HANDLERS if isinstance(h, CommandHandler) for c in h.commands})
-    await app.bot.set_my_commands([BotCommand(c, c) for c in cmds if c not in ("start", "help")])
+    await app.bot.set_my_commands([BotCommand("menu", "📲 mostra il menu")] +
+                                  [BotCommand(c, c) for c in cmds if c not in ("start", "help", "menu")][:99])
     if hasattr(bot, "on_start"):
         await bot.on_start(app)
     await app.start()

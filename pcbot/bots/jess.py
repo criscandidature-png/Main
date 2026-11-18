@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
+from pcbot import menu as _menu
 from pcbot import ai, brain, notion, storage
 
 NAME = "Jess"
@@ -139,6 +140,8 @@ async def photo(update, context):
 
 @restricted
 async def chat(update, context):
+    if not _menu.addressed(update, context):
+        return
     await update.message.chat.send_action("typing")
     try:
         await reply_long(update.message, await ask_claude(context, update.message.text))
@@ -149,7 +152,7 @@ async def chat(update, context):
 @restricted
 async def area_cmd(update, context):
     if update.message.text.startswith(("/lavoro", "/personale")):
-        context.chat_data["area"] = update.message.text.split()[0].lstrip("/").split("@")[0]
+        context.chat_data["area"] = (context.chat_data.pop("_cmd", None) or update.message.text.split()[0].lstrip("/").split("@")[0])
         return await update.message.reply_text(f"Profilo: {area(context)} ✔︎")
     await update.message.reply_text("Per quale profilo lavoro?", reply_markup=InlineKeyboardMarkup([[
         InlineKeyboardButton("💼 Lavoro (Stefania)", callback_data="js:lavoro"),
@@ -183,6 +186,8 @@ Oppure scrivimi liberamente 💬""" + brain.HELP
 @restricted
 async def aiuto(update, context):
     await update.message.reply_text(HELP, parse_mode="HTML")
+    if update.message.text.startswith("/start"):
+        await show_menu(update, context)
 
 
 async def on_start(app):
@@ -200,3 +205,10 @@ HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto),
             *brain.handlers(NAME),
             MessageHandler(filters.PHOTO, photo),
             MessageHandler(filters.TEXT & ~filters.COMMAND, chat)]
+
+
+MENU = [[("💡 Idee", "idee", None), ("🗓 Piano settimana", "piano", None)],
+        [("✍️ Caption", "caption", "Di cosa parla il post?"), ("🪝 Hook", "hook", "Argomento del reel?")],
+        [("🎬 Script reel", "script", "Argomento del reel?"), ("#️⃣ Hashtag", "hashtag", "Argomento?")],
+        [("💬 Rispondi a commento", "risposta", "Incolla il commento o il DM"), ("🔀 Profilo", "profilo", None)]]
+MENU_HANDLERS, show_menu = _menu.build(MENU, HANDLERS)
