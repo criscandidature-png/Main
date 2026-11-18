@@ -1,0 +1,17 @@
+# FORMAT 1 — Giudice / protocollo (i due reel da ~150K). Volto + scene AI alternati.
+base: lavoro
+taglio: { pausa_max: 0.15, margine: 0.06 }
+ai:
+  istruzioni: |
+    Format "Giudice": manifesto di 40-60 secondi.
+    Struttura: HOOK (0-3 s, frase-provocazione di 3-6 parole) -> PROBLEMA (cliente che non torna,
+    prezzo che cala) -> METAFORA dantesca -> TESI ("l'accoglienza non si improvvisa", è un metodo)
+    -> CHIUSURA con appello diretto. La CTA (libro "La Divina Accoglienza" o sito) è nella caption,
+    non serve tenerla nel parlato se allunga.
+    Per il b-roll proponi 4-6 scene AI, una per ogni concetto chiave, a tutto schermo verticale,
+    in uno di due stili: pittura a olio con luce calda, oppure iper-realismo dorato e luminoso.
+    Palette: rosso #C8102E, bordeaux/nero, oro. Se compare lei: donna in tailleur rosso.
+    Esempi: banconote a pittura a olio, grand hotel di notte, palazzo dorato, cielo di lava,
+    camera di lusso con lampadario dorato, numeri 3D dorati in un corridoio d'hotel.
+formati:
+  "9:16": { durata_max: 60, zoom: { attivo: true, fattore: 1.10, ogni: 2 } }

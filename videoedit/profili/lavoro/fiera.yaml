@@ -1,0 +1,9 @@
+# FORMAT 4 — Serie fiere e festival (Vivere di Turismo, TTG). Poltrona gialla, invito a conoscerla.
+base: lavoro
+ai:
+  istruzioni: |
+    Video da fiera/festival: Stefania si presenta e invita a conoscerla allo stand o al talk.
+    Breve e diretto: chi è, cosa fa, perché fermarsi a parlarle, dove trovarla.
+    Nessuna scena AI (broll vuoto).
+formati:
+  "9:16": { durata_max: 45 }

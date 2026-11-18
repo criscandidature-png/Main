@@ -1,7 +1,8 @@
 """🎬 Vivi – editor video. Mandale un video, poi dai un comando."""
-import asyncio, os, shutil, tempfile, uuid
+import asyncio, os, re, shutil, sys, tempfile, uuid
 from pathlib import Path
-from telegram.ext import CommandHandler, MessageHandler, filters
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import CallbackQueryHandler, CommandHandler, MessageHandler, filters
 from pcbot.auth import restricted
 
 NAME = "Vivi"
@@ -30,9 +31,22 @@ def out(ext=".mp4"):
     return WORK / f"{uuid.uuid4().hex}{ext}"
 
 
+def area(context):
+    return context.chat_data.get("area")
+
+
+def archivio(context) -> Path:
+    """FILES_ROOT/Vivi/Lavoro o FILES_ROOT/Vivi/Personale"""
+    d = FILES_ROOT / "Vivi" / (area(context) or "personale").capitalize()
+    d.mkdir(parents=True, exist_ok=True)
+    return d
+
+
 async def send(update, path, chain=True, context=None):
+    if context:  # copia sempre il risultato nella cartella dell'area
+        shutil.copy2(path, archivio(context) / path.name)
     if path.stat().st_size > 50 * 2**20:
-        dest = FILES_ROOT / "Vivi" / path.name
+        dest = (archivio(context) if context else FILES_ROOT / "Vivi") / path.name
         dest.parent.mkdir(exist_ok=True)
         shutil.move(path, dest)
         await update.message.reply_text(f"📁 File oltre 50 MB, salvato sul PC: {dest}")
@@ -67,7 +81,7 @@ async def receive(update, context):
     dest = out()
     await (await media.get_file()).download_to_drive(dest)
     context.chat_data["video"] = str(dest)
-    await m.reply_text("✅ Video ricevuto! Cosa faccio? /aiuto")
+    await ask_area(m)
 
 
 @restricted
@@ -76,7 +90,102 @@ async def from_pc(update, context):
     if FILES_ROOT not in p.parents or not p.is_file():
         return await update.message.reply_text("❌ File non trovato dentro FILES_ROOT.")
     context.chat_data["video"] = str(p)
-    await update.message.reply_text(f"✅ Uso {p.name}")
+    await ask_area(update.message)
+
+
+# ---------- Lavoro / Personale + montaggio automatico (videoedit/editor.py) ----------
+EDITOR = Path(__file__).resolve().parents[2] / "videoedit" / "editor.py"
+STILI_LAVORO = ["giudice", "testimonial", "evento", "fiera", "youtube"]
+LABEL = {"lavoro": "💼 Lavoro (Stefania)", "personale": "🏠 Personale"}
+
+
+def kb(rows):
+    return InlineKeyboardMarkup([[InlineKeyboardButton(t, callback_data=d) for t, d in r] for r in rows])
+
+
+async def ask_area(message):
+    await message.reply_text("✅ Video ricevuto! È per lavoro o personale?", reply_markup=kb(
+        [[(LABEL["lavoro"], "vv:area:lavoro"), (LABEL["personale"], "vv:area:personale")]]))
+
+
+async def ask_style(message, context):
+    if area(context) == "lavoro":
+        rows = [[(s.capitalize(), f"vv:stile:lavoro/{s}") for s in STILI_LAVORO[i:i + 3]] for i in (0, 3)]
+        rows.append([("Base lavoro", "vv:stile:lavoro")])
+    else:
+        rows = [[("Personale", "vv:stile:personale")]]
+    rows.append([("✂️ Modifica a mano (/aiuto)", "vv:manuale")])
+    await message.reply_text("Che stile uso per il montaggio automatico?", reply_markup=kb(rows))
+
+
+@restricted
+async def area_cmd(update, context):
+    """/lavoro o /personale – cambia area."""
+    context.chat_data["area"] = update.message.text.split()[0].lstrip("/").split("@")[0]
+    await update.message.reply_text(f"Area: {LABEL[area(context)]}\nI file vanno in {archivio(context)}")
+    if context.chat_data.get("video"):
+        await ask_style(update.message, context)
+
+
+@restricted
+async def monta_cmd(update, context):
+    """/monta – montaggio automatico del video attuale."""
+    if not area(context):
+        return await ask_area(update.message)
+    await ask_style(update.message, context)
+
+
+@restricted
+async def buttons(update, context):
+    q = update.callback_query
+    await q.answer()
+    _, kind, *val = q.data.split(":", 2) + [""]
+    val = val[0]
+    if kind == "area":
+        context.chat_data["area"] = val
+        await q.edit_message_text(f"{LABEL[val]} ✔︎")
+        await ask_style(q.message, context)
+    elif kind == "manuale":
+        await q.edit_message_text(HELP, parse_mode="HTML")
+    elif kind == "stile":
+        context.chat_data["stile"] = val
+        await q.edit_message_text(f"Stile: {val} ✔︎\nFormato?", reply_markup=kb([
+            [("📱 9:16", "vv:fmt:9:16"), ("🖥 16:9", "vv:fmt:16:9"), ("Come l'originale", "vv:fmt:auto")],
+            [("⚡ Anteprima veloce 480p", "vv:fmt:prev")]]))
+    elif kind == "fmt":
+        prev = val == "prev"
+        fmt = context.chat_data.get("fmt", "auto") if prev else val
+        context.chat_data["fmt"] = fmt
+        await q.edit_message_text(f"🎬 Monto «{context.chat_data['stile']}» {fmt}"
+                                  f"{' (anteprima)' if prev else ''}... può volerci qualche minuto.")
+        await auto_edit(q.message, context, fmt, prev)
+
+
+async def auto_edit(message, context, fmt, preview):
+    try:
+        video = current(context)
+        args = [sys.executable, str(EDITOR), "tutto", str(video), "--profilo", context.chat_data["stile"],
+                "--formato", fmt] + (["--anteprima"] if preview else []) + \
+               ([] if os.getenv("ANTHROPIC_API_KEY") else ["--senza-ai"])
+        proc = await asyncio.create_subprocess_exec(*args, stdout=asyncio.subprocess.PIPE,
+                                                    stderr=asyncio.subprocess.STDOUT, cwd=EDITOR.parent)
+        log = (await proc.communicate())[0].decode(errors="replace")
+        m = re.search(r"\[fatto\] (.+\.mp4)", log)
+        if proc.returncode or not m:
+            return await message.reply_text("❌ Montaggio non riuscito:\n" + log[-1500:])
+        result = Path(m[1].strip())
+        dest = archivio(context) / result.name
+        shutil.copy2(result, dest)
+        if dest.stat().st_size <= 50 * 2**20:
+            await message.reply_video(dest.open("rb"), supports_streaming=True)
+        await message.reply_text(f"✅ Fatto! Salvato in {dest}")
+        scene = result.parent / "scene_da_generare.txt"
+        if scene.exists():
+            await message.reply_document(scene.open("rb"), caption=(
+                f"🎨 Scene AI da generare. Salvale in {result.parent / 'broll'} come 1.jpg, 2.mp4… "
+                "poi rimanda /monta"))
+    except Exception as e:
+        await message.reply_text(f"❌ {e}")
 
 
 @action
@@ -132,7 +241,7 @@ async def muto(update, context):
 @action
 async def audio(update, context):
     o = out(".mp3"); await ffmpeg("-i", current(context), "-vn", "-b:a", "192k", o)
-    await send(update, o, chain=False)
+    await send(update, o, chain=False, context=context)
 
 
 @action
@@ -140,7 +249,7 @@ async def gif(update, context):
     o = out(".gif")
     await ffmpeg("-i", current(context), "-t", "8", "-vf",
                  "fps=12,scale=480:-1:flags=lanczos,split[a][b];[a]palettegen[p];[b][p]paletteuse", o)
-    await send(update, o, chain=False)
+    await send(update, o, chain=False, context=context)
 
 
 @action
@@ -164,7 +273,15 @@ async def testo(update, context):
 
 HELP = """🎬 <b>Ciao, sono Vivi, la tua video editor!</b>
 Mandami un video (max 20 MB) oppure /pc &lt;percorso&gt; per un file sul PC.
-Ogni modifica si applica al risultato precedente, così puoi concatenarle.
+Ti chiedo se è <b>lavoro</b> o <b>personale</b>: i file finiscono in cartelle separate
+(Vivi/Lavoro e Vivi/Personale) e uso gli stili giusti.
+
+<b>Montaggio automatico</b> (tagli, sottotitoli, ritmo)
+/monta – scegli stile e formato
+/lavoro · /personale – cambia area
+Stili lavoro: giudice, testimonial, evento, fiera, youtube
+
+<b>Modifiche a mano</b> (si concatenano)
 
 /taglia 0:05 0:20 – taglia
 /verticale – 9:16 per Reel/TikTok
@@ -184,6 +301,8 @@ async def aiuto(update, context):
 
 
 HANDLERS = [CommandHandler(["start", "aiuto", "help"], aiuto), CommandHandler("pc", from_pc),
+            CommandHandler(["lavoro", "personale"], area_cmd), CommandHandler("monta", monta_cmd),
+            CallbackQueryHandler(buttons, pattern=r"^vv:"),
             MessageHandler(filters.VIDEO | filters.VIDEO_NOTE | filters.Document.VIDEO, receive)] + [
     CommandHandler(f.__name__, f) for f in
     (taglia, verticale, quadrato, comprimi, velocita, muto, audio, gif, copertina, testo)]

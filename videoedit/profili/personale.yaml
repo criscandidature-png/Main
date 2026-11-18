@@ -1,0 +1,55 @@
+# PROFILO: PERSONALE — stile dinamico, social
+nome: personale
+lingua: it
+
+taglio:
+  pausa_max: 0.20          # più serrato
+  margine: 0.07
+  togli_riempitivi: true
+  riempitivi: [ehm, ehh, uhm, mmm, cioè, tipo, allora, praticamente, diciamo, niente]
+  togli_ripetizioni: true
+  soglia_ripetizione: 0.75
+
+audio:
+  loudness: -14            # standard social
+
+ai:
+  modello: claude-haiku-5-5
+  istruzioni: |
+    Video personale per i social. Ritmo veloce.
+    Il primo segmento tenuto deve essere un HOOK forte (frase che incuriosisce).
+    Taglia tutto ciò che è lento, ridondante o noioso.
+
+formati:
+  "16:9":
+    larghezza: 1920
+    altezza: 1080
+    durata_max: null
+    zoom: { attivo: true, fattore: 1.10, ogni: 2 }
+    sottotitoli:
+      attivi: true
+      font: Arial Black
+      dimensione: 64
+      colore: "#FFFFFF"
+      bordo: "#000000"
+      spessore_bordo: 4
+      maiuscolo: true
+      parole_per_riga: 5
+      posizione: basso
+      margine_verticale: 80
+  "9:16":
+    larghezza: 1080
+    altezza: 1920
+    durata_max: 60
+    zoom: { attivo: true, fattore: 1.12, ogni: 2 }
+    sottotitoli:
+      attivi: true
+      font: Arial Black
+      dimensione: 90
+      colore: "#FFE600"
+      bordo: "#000000"
+      spessore_bordo: 5
+      maiuscolo: true
+      parole_per_riga: 3
+      posizione: centro
+      margine_verticale: 450

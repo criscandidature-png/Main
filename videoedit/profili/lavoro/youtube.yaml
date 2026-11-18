@@ -1,0 +1,17 @@
+# YOUTUBE — video lunghi orizzontali. Stesso tono e stessi colori, più respiro.
+base: lavoro
+taglio: { pausa_max: 0.40, margine: 0.10 }
+audio: { loudness: -14 }
+ai:
+  istruzioni: |
+    Video YouTube lungo. Mantieni tutto il contenuto di valore, gli esempi pratici e le storie.
+    Taglia solo false partenze, ripetizioni, divagazioni e momenti morti.
+    Il primo segmento deve dire subito di cosa parla il video e perché guardarlo fino in fondo.
+    Proponi scene AI (broll) solo per i concetti più forti, al massimo una ogni minuto circa,
+    nello stile del brand: pittura a olio calda o iper-realismo dorato, palette rosso/bordeaux/oro.
+formati:
+  "16:9":
+    durata_max: null
+    broll_durata_max: 4.0
+    zoom: { attivo: true, fattore: 1.05, ogni: 4 }
+    sottotitoli: { attivi: false }   # su YouTube si caricano a parte (file .srt)

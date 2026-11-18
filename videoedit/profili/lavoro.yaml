@@ -1,0 +1,66 @@
+# PROFILO: LAVORO — La Madrina dell'Accoglienza (Stefania Salvatore)
+# Valori ricavati dal "Report stile video" del 17/11/2026.
+# Gli stili specifici sono in profili/lavoro/: giudice, testimonial, evento, fiera, youtube
+nome: lavoro
+lingua: it
+
+taglio:
+  pausa_max: 0.25          # i reel non lasciano pause
+  margine: 0.08
+  togli_riempitivi: true
+  riempitivi: [ehm, ehh, uhm, mmm, cioè, tipo, allora, praticamente, diciamo]
+  togli_ripetizioni: true
+  soglia_ripetizione: 0.75
+
+audio:
+  loudness: -14
+
+ai:
+  modello: claude-haiku-5-5
+  istruzioni: |
+    Video di Stefania Salvatore, "La Madrina dell'Accoglienza", prima esperta di accoglienza in Italia.
+    Pubblico: imprenditori dell'ospitalità, a cui si dà del tu.
+    Tono autorevole e provocatorio: contrappone "gentilezza" a "protocollo", usa parole come
+    scientifico, regia, metodo. Immaginario dantesco: giudice, inferno, paradiso, Caronte, corona.
+    Messaggio: "L'accoglienza non è gentilezza. È un protocollo che fa tornare i clienti."
+    Frasi brevi. Taglia false partenze, ripetizioni e divagazioni.
+
+formati:
+  "9:16":
+    larghezza: 1080
+    altezza: 1920
+    durata_max: 60
+    broll_durata_max: 3.0
+    zoom: { attivo: true, fattore: 1.08, ogni: 2 }   # finto cambio inquadratura ogni 2-4 s
+    sottotitoli:
+      attivi: true
+      font: Poppins            # sans geometrico bold (se manca, il Mac usa un font simile)
+      dimensione: 78
+      colore: "#FFFFFF"
+      bordo: "#000000"
+      spessore_bordo: 0        # niente contorno né box
+      ombra: 2                 # solo ombra leggera
+      minuscolo: true
+      maiuscolo: false
+      togli_punteggiatura: true
+      parole_per_riga: 3       # 1-4 parole per schermata
+      altezza_percento: 65     # centrato al 65% dell'altezza
+  "16:9":
+    larghezza: 1920
+    altezza: 1080
+    durata_max: null
+    broll_durata_max: 3.0
+    zoom: { attivo: true, fattore: 1.06, ogni: 3 }
+    sottotitoli:
+      attivi: true
+      font: Poppins
+      dimensione: 56
+      colore: "#FFFFFF"
+      bordo: "#000000"
+      spessore_bordo: 0
+      ombra: 2
+      minuscolo: true
+      maiuscolo: false
+      togli_punteggiatura: true
+      parole_per_riga: 5
+      altezza_percento: 82

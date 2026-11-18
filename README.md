@@ -41,6 +41,12 @@ salva da sola le cose importanti che le dici.
 
 ## Vivi
 Mandale un video (max 20 MB, limite Telegram) o usa `/pc Video/clip.mp4` per un file sul PC.
+Vivi chiede subito **💼 Lavoro** o **🏠 Personale**:
+- i risultati finiscono in `FILES_ROOT/Vivi/Lavoro` o `FILES_ROOT/Vivi/Personale`;
+- il montaggio automatico (`/monta`) usa l'editor in `videoedit/` con gli stili giusti:
+  lavoro → giudice, testimonial, evento, fiera, youtube · personale → stile social dinamico.
+- `/lavoro` e `/personale` cambiano area in qualsiasi momento.
+
 Le modifiche si concatenano: es. `/taglia 0:05 0:30` → `/verticale` → `/testo Nuovo video!`
 Comandi: `/taglia` `/verticale` `/quadrato` `/comprimi` `/velocita 1.5` `/testo` `/muto` `/audio` `/gif` `/copertina`
 
